@@ -8,7 +8,7 @@ public class Patient {
 	private int swingPatientId;
 	private int smisPatientId;
 	private InsuranceCard insuranceCard;
-	private int actice;
+	private int active;
 	private String title;
 	private String givenName;
 	private String familyName;
@@ -27,6 +27,7 @@ public class Patient {
 	private Date creationDate;
 	private Date lastUpdate;
 	private Date deletionDate;
+	
 	public int getPatientId() {
 		return patientId;
 	}
@@ -51,11 +52,11 @@ public class Patient {
 	public void setInsuranceCard(InsuranceCard insuranceCard) {
 		this.insuranceCard = insuranceCard;
 	}
-	public int getActice() {
-		return actice;
+	public int getActive() {
+		return active;
 	}
-	public void setActice(int actice) {
-		this.actice = actice;
+	public void setActive(int active) {
+		this.active = active;
 	}
 	public String getTitle() {
 		return title;

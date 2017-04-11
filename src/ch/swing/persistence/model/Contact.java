@@ -10,6 +10,8 @@ public class Contact {
 	private String familyName;
 	private String road;
 	private String city;
+	private int postalCode;
+	private String country;
 	private int gender;
 	private String organization;
 	private String period;
@@ -53,6 +55,18 @@ public class Contact {
 	}
 	public void setCity(String city) {
 		this.city = city;
+	}
+	public int getPostalCode() {
+		return postalCode;
+	}
+	public void setPostalCode(int postalCode) {
+		this.postalCode = postalCode;
+	}
+	public String getCountry() {
+		return country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
 	}
 	public int getGender() {
 		return gender;

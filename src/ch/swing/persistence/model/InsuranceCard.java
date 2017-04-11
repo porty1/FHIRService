@@ -6,7 +6,7 @@ public class InsuranceCard {
 
 	private int insuranceCardId;
 	private int cardNumber;
-	private Date validForm;
+	private Date validFrom;
 	private Date validTo;
 	private String insurance;
 	private Date creationDate;
@@ -24,11 +24,11 @@ public class InsuranceCard {
 	public void setCardNumber(int cardNumber) {
 		this.cardNumber = cardNumber;
 	}
-	public Date getValidForm() {
-		return validForm;
+	public Date getValidFrom() {
+		return validFrom;
 	}
-	public void setValidForm(Date validForm) {
-		this.validForm = validForm;
+	public void setValidFrom(Date validFrom) {
+		this.validFrom = validFrom;
 	}
 	public Date getValidTo() {
 		return validTo;
