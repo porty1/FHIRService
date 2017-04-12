@@ -45,7 +45,7 @@ import ch.swing.persistence.model.Telecom;
 
 public class MasterDataController {
 	// Defining the objects that are needed to create the methods
-		private static MasterDataController pc = null;
+		private static MasterDataController mc = null;
 		private static DB_Connection dc = DB_Connection.getInstance();
 		private static Connection connection = null;
 		
@@ -60,10 +60,10 @@ public class MasterDataController {
 		 */
 		public static MasterDataController getInstance() {
 			
-			if (pc == null) {
-				pc = new MasterDataController();
+			if (mc == null) {
+				mc = new MasterDataController();
 			}
-			return pc;
+			return mc;
 		}
 		
 		/**
@@ -99,10 +99,9 @@ public class MasterDataController {
 		 * 
 		 * <br>
 		 */
-		public  List<Patient> getMasterDataChanges ()
+		public  List<Patient> getMasterDataChanges (int idPatient)
 			   {
 				Patient patient = new Patient();
-				InsuranceCard insuranceCard = new InsuranceCard();
 				List<Patient> patientList = new ArrayList<Patient>();
 				
 			    Statement stmt = null;
@@ -130,7 +129,7 @@ public class MasterDataController {
 			            String 	country = rs.getString("country");
 			            String 	communicationLanguage = rs.getString("communicationLanguage");
 			            int		idGeneralPractitioner = rs.getInt("idGeneralPractitioner");
-			            String 	managingOrganziation = rs.getString("managingOrganziation");
+			            String 	managingOrganization = rs.getString("managingOrganization");
 			            Date 	creationDate = rs.getDate("creationDate");
 			            Date 	lastUpdate = rs.getDate("lastUpdate");
 			            Date 	deletionDate = rs.getDate("deletionDate");
@@ -151,10 +150,12 @@ public class MasterDataController {
 			            patient.setCity(city);
 			            patient.setPostalCode(postalCode);
 			            patient.setCountry(country);
-			            
-			           
-			            
-			           
+			            patient.setCommunicationLanguage(communicationLanguage);
+			            patient.setGeneralPractitioner(getGeneralPractitioner(idGeneralPractitioner));
+			            patient.setManagingOrganization(managingOrganization);
+			            patient.setCreationDate(creationDate);
+			            patient.setLastUpdate(lastUpdate);
+			            patient.setDeletionDate(deletionDate);
 			            
 			            
 			            patientList.add(patient);
@@ -173,6 +174,78 @@ public class MasterDataController {
 				return null;
 				
 			}
+		
+		public  Patient getPatient (int idPatient)
+		   {
+			Patient patient = new Patient();
+			
+		    Statement stmt = null;
+		    String query = "select * from Patient where patientId="+idPatient;
+		    try {
+		    	
+		        stmt = connection.createStatement();
+		        ResultSet rs = stmt.executeQuery(query);
+		        while (rs.next()) {
+		            int 	patientId = rs.getInt("patientId");
+		            int		swingPatientId = rs.getInt("swingPatientId");
+		            int	 	smisPatientId = rs.getInt("smisPatientId");
+		            int 	idSocialInsuranceCard = rs.getInt("idSocialInsuranceCard");
+		            int 	active = rs.getInt("active");
+		            String 	title = rs.getString("title");
+		            String 	givenName = rs.getString("givenName");
+		            String 	familyName = rs.getString("familyName");
+		            int 	idTelecom = rs.getInt("idTelecom");
+		            int		gender = rs.getInt("gender");
+		            Date	birthDate = rs.getDate("birthDate");
+		            Date	deceasedDate = rs.getDate("deceasedDate");
+		            String 	road = rs.getString("road");
+		            String 	city = rs.getString("city");
+		            int		postalCode = rs.getInt("postalCode");
+		            String 	country = rs.getString("country");
+		            String 	communicationLanguage = rs.getString("communicationLanguage");
+		            int		idGeneralPractitioner = rs.getInt("idGeneralPractitioner");
+		            String 	managingOrganization = rs.getString("managingOrganization");
+		            Date 	creationDate = rs.getDate("creationDate");
+		            Date 	lastUpdate = rs.getDate("lastUpdate");
+		            Date 	deletionDate = rs.getDate("deletionDate");
+		            
+		            patient.setPatientId(patientId);
+		            patient.setSwingPatientId(swingPatientId);
+		            patient.setSmisPatientId(smisPatientId);
+		            patient.setInsuranceCard(getInsuranceCard(idSocialInsuranceCard));
+		            patient.setActive(active);
+		            patient.setTitle(title);
+		            patient.setGivenName(givenName);
+		            patient.setFamilyName(familyName);
+		            patient.setTelecom(getTelecom(idTelecom));
+		            patient.setGender(gender);
+		            patient.setBirthDate(birthDate);
+		            patient.setDeceasedDate(deceasedDate);
+		            patient.setRoad(road);
+		            patient.setCity(city);
+		            patient.setPostalCode(postalCode);
+		            patient.setCountry(country);
+		            patient.setCommunicationLanguage(communicationLanguage);
+		            patient.setGeneralPractitioner(getGeneralPractitioner(idGeneralPractitioner));
+		            patient.setManagingOrganization(managingOrganization);
+		            patient.setCreationDate(creationDate);
+		            patient.setLastUpdate(lastUpdate);
+		            patient.setDeletionDate(deletionDate);
+		            
+		            return patient;
+		        }
+		    } catch (SQLException err ) {
+		    	System.out.println(err.getMessage());
+		    } finally {
+		        if (stmt != null) { try {
+					stmt.close();
+				} catch (SQLException err) {
+					System.out.println(err.getMessage());
+				} }
+		    }
+			return null;
+			
+		}
 		
 		public  InsuranceCard getInsuranceCard (int insuranceCardId)
 		   {
