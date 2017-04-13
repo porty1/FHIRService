@@ -2,6 +2,7 @@ package ch.swing.bc;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Bundle.BundleEntryRequestComponent;
 import org.hl7.fhir.dstu3.model.Bundle.HTTPVerb;
@@ -12,12 +13,16 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.IGenericClient;
 
 public class Masterdata {
+	final static Logger logger = Logger.getLogger(Masterdata.class);
 	
 	public static void main(String[] args) {
 		createPatient();
 	}
 
 	public static void createPatient() {
+
+		
+		
 		// Creating the FHIR DSTU3 Context
 		FhirContext ctx = FhirContext.forDstu3();
 		// Create a patient object
