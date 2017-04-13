@@ -11,12 +11,16 @@ import org.hl7.fhir.dstu3.model.Patient;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.IGenericClient;
+import ch.swing.persistence.controller.MasterDataController;
 
 public class Masterdata {
 	final static Logger logger = Logger.getLogger(Masterdata.class);
 	
 	public static void main(String[] args) {
-		createPatient();
+		MasterDataController mdController = new MasterDataController();
+		mdController.getPatient(2);
+		
+		//createPatient();
 	}
 
 	public static void createPatient() {

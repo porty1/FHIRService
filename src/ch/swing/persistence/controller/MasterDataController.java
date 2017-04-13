@@ -8,6 +8,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
+import ch.swing.bc.Masterdata;
 import ch.swing.persistence.model.Contact;
 import ch.swing.persistence.model.InsuranceCard;
 import ch.swing.persistence.model.Patient;
@@ -44,6 +47,8 @@ import ch.swing.persistence.model.Telecom;
  */
 
 public class MasterDataController {
+	final static Logger logger = Logger.getLogger(MasterDataController.class);
+	
 	// Defining the objects that are needed to create the methods
 		private static MasterDataController mc = null;
 		private static DB_Connection dc = DB_Connection.getInstance();
@@ -185,6 +190,7 @@ public class MasterDataController {
 		    	
 		        stmt = connection.createStatement();
 		        ResultSet rs = stmt.executeQuery(query);
+		        logger.debug(rs.toString());
 		        while (rs.next()) {
 		            int 	patientId = rs.getInt("patientId");
 		            int		swingPatientId = rs.getInt("swingPatientId");
@@ -336,19 +342,19 @@ public class MasterDataController {
 			
 		}
 		
-		public  Contact getGeneralPractitioner (int contactId)
+		public  Contact getGeneralPractitioner (int cId)
 		   {
 			Contact contact = new Contact();
 			
 		    Statement stmt = null;
-		    String query = "select * from Telecom where contactId="+contactId;
+		    String query = "select * from Contact where contactId="+cId;
 		    try {
 		    	
 		        stmt = connection.createStatement();
 		        ResultSet rs = stmt.executeQuery(query);
 		        while (rs.next()) {
 		        	
-		            int 	idContact = rs.getInt("contactId");
+		            int 	contactId = rs.getInt("contactId");
 		            String 	title = rs.getString("title");
 		            String 	givenName = rs.getString("givenName");
 		            String 	familyName = rs.getString("familyName");
@@ -364,7 +370,7 @@ public class MasterDataController {
 		            Date 	lastUpdate = rs.getDate("lastUpdate");
 		            Date 	deletionDate = rs.getDate("deletionDate");
 		          
-		            contact.setContactId(idContact);
+		            contact.setContactId(contactId);
 		            contact.setTitle(title);
 		            contact.setGivenName(givenName);
 		            contact.setFamilyName(familyName);
