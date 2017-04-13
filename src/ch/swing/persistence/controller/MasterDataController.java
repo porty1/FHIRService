@@ -231,7 +231,7 @@ public class MasterDataController {
 		            patient.setCreationDate(creationDate);
 		            patient.setLastUpdate(lastUpdate);
 		            patient.setDeletionDate(deletionDate);
-		            
+		          
 		            return patient;
 		        }
 		    } catch (SQLException err ) {
@@ -379,7 +379,6 @@ public class MasterDataController {
 		            contact.setCreationDate(creationDate);
 		            contact.setLastUpdate(lastUpdate);
 		            contact.setDeletionDate(deletionDate);
-		            
 		            
 		            return contact;
 		        }
