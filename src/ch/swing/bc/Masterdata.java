@@ -24,6 +24,9 @@ public class Masterdata {
 	}
 
 	public static void createPatient() {
+
+		
+		
 		// Creating the FHIR DSTU3 Context
 		FhirContext ctx = FhirContext.forDstu3();
 		// Create a patient object
@@ -60,7 +63,7 @@ public class Masterdata {
 	}
 
 	public List<Patient> getPatientList() {
-		
+
 		return null;
 	}
 
