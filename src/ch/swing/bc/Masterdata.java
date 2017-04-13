@@ -2,31 +2,60 @@ package ch.swing.bc;
 
 import java.util.List;
 
+import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.dstu3.model.Bundle.BundleEntryRequestComponent;
+import org.hl7.fhir.dstu3.model.Bundle.HTTPVerb;
+import org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.dstu3.model.Patient;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.rest.client.IGenericClient;
 
 public class Masterdata {
-
-	public void createPatient(){
-		//Creating the FHIR Context
-		FhirContext ctx = FhirContext.forDstu3();
-		// Working with RI structures is similar to how it works with the HAPI structures
-		org.hl7.fhir.dstu3.model.Patient patient = new org.hl7.fhir.dstu3.model.Patient();
-		patient.addName().addGiven("John").setFamily("Smith");
-		patient.getBirthDateElement().setValueAsString("1998-02-22");
-		
-		
-		
-		
-		// Parsing and encoding works the same way too
-		String encoded = ctx.newJsonParser().encodeResourceToString(patient);
-	}
 	
-	public List<Patient> getPatientList(){
-		
-		
+	public static void main(String[] args) {
+		createPatient();
+	}
+
+	public static void createPatient() {
+		// Creating the FHIR DSTU3 Context
+		FhirContext ctx = FhirContext.forDstu3();
+		// Create a patient object
+		Patient patient = new Patient();
+		// Add the Birthdate of the Patient
+		patient.getBirthDateElement().setValueAsString("1998-02-22");
+		// Add the all the identifiers of the Patient
+		patient.addIdentifier().setSystem("http://acme.org/mrns").setValue("12345");
+		patient.addIdentifier().setSystem("Swing ID").setValue("1234");
+		patient.addIdentifier().setSystem("Swing ID").setValue("1234");
+		patient.addIdentifier().setSystem("AHV-Nummer").setValue("756.1012.1018.52");
+		// Add the Family and Given Name of the Patient
+		patient.addName().setFamily("Jameson").addGiven("Jonah");
+		// Add the Gender of the Patient
+		patient.setGender(AdministrativeGender.MALE);
+		// Add the Address of the Patient
+		patient.addAddress().setPostalCode("PLZ").setCity("city").setText("Street");
+
+		Bundle bundle = new Bundle();
+		// bundle.setType(BundleTypeEnum.TRANSACTION);
+
+		bundle.addEntry().setFullUrl("Test").setResource(patient).setRequest(new BundleEntryRequestComponent().setMethod(HTTPVerb.POST));
+
+		// Log the request
+		System.out.println(ctx.newXmlParser().setPrettyPrint(true).encodeResourceToString(bundle));
+
+		// Create a client and post the transaction to the server
+		IGenericClient client = ctx.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3");
+		Bundle resp = client.transaction().withBundle(bundle).execute();
+
+		// Log the response
+		System.out.println(ctx.newXmlParser().setPrettyPrint(true).encodeResourceToString(resp));
+
+	}
+
+	public List<Patient> getPatientList() {
+
 		return null;
 	}
-	
+
 }
