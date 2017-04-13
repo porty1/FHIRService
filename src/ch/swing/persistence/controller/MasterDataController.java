@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -403,19 +404,23 @@ public class MasterDataController {
 			
 		}
 		
+
 		public  void setCreationDate (int patientId)
 		   {
 			
-			LocalDateTime actualDate = LocalDateTime.now();
+			java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis());
 			
 		    Statement stmt = null;
 		    
-		    String query = "Update Patient set creationDate="+actualDate+"where patientId ="+patientId;
+//		    String query = "Update Patient set creationDate="+sqlDate+"where patientId ="+patientId;
+		    String query2 = "Update Patient set familyName="+"Hans"+"where patientId ="+ patientId;
+		    
 		    
 		    try {
 		    	
 		        stmt = connection.createStatement();
-		        stmt.executeQuery(query);
+//		        stmt.executeQuery(query);
+		        stmt.executeQuery(query2);
 		       
 		    } catch (SQLException err ) {
 		    	System.out.println(err.getMessage());

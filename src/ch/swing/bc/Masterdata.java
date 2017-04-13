@@ -19,7 +19,7 @@ public class Masterdata {
 	public static void main(String[] args) {
 		MasterDataController mdController = new MasterDataController();
 //		mdController.getPatient(2);
-		mdController.setCreationDate(1);
+		mdController.setCreationDate();
 		
 		//createPatient();
 	}
