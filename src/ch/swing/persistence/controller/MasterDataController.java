@@ -5,6 +5,8 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -400,4 +402,33 @@ public class MasterDataController {
 			return null;
 			
 		}
+		
+		public  void setCreationDate (int patientId)
+		   {
+			
+			LocalDateTime actualDate = LocalDateTime.now();
+			
+		    Statement stmt = null;
+		    
+		    String query = "Update Patient set creationDate="+actualDate+"where patientId ="+patientId;
+		    
+		    try {
+		    	
+		        stmt = connection.createStatement();
+		        stmt.executeQuery(query);
+		       
+		    } catch (SQLException err ) {
+		    	System.out.println(err.getMessage());
+		    } finally {
+		        if (stmt != null) { try {
+					stmt.close();
+				} catch (SQLException err) {
+					System.out.println(err.getMessage());
+				} }
+		    }
+		
+			
+		}
 }
+
+
