@@ -105,9 +105,10 @@ public class MasterDataController {
 		 * @return name - name of the Person which fits with the pid in the database will be returned
 		 * @exception the SQL Excepion is catched and shows if the connection failed
 		 * 
+		 * TODO: idPatient Attribut wurde entfernt, auswirkungen?
 		 * <br>
-		 */
-		public  List<Patient> getMasterDataChanges (int idPatient)
+		 */ 
+		public  List<Patient> getMasterDataChanges ()
 			   {
 				Patient patient = new Patient();
 				List<Patient> patientList = new ArrayList<Patient>();
