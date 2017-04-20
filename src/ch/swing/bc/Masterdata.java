@@ -22,11 +22,16 @@ import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
 import ch.swing.helper.CodingSystems;
 import ch.swing.persistence.controller.MasterDataController;
 
+/**
+ * 
+ * @author Yannis Portmann
+ *
+ */
 public class Masterdata {
 	final static Logger logger = Logger.getLogger(Masterdata.class);
 
 	public static void main(String[] args) {
-		MasterDataController mdController = new MasterDataController();
+		// MasterDataController mdController = new MasterDataController();
 		// mdController.getPatient(2);
 		// mdController.setCreationDate();
 
@@ -39,7 +44,6 @@ public class Masterdata {
 		// Create a patient object
 		Patient patient = new Patient();
 
-		/** My vaccine gender to FHIR gender conversion map. */
 		@SuppressWarnings("serial")
 		final Map<Short, AdministrativeGender> genderMap = new HashMap<Short, AdministrativeGender>() {
 			{
