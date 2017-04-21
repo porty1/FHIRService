@@ -27,8 +27,8 @@ import ch.swing.persistence.controller.MasterDataController;
  * @author Yannis Portmann
  *
  */
-public class Masterdata {
-	final static Logger logger = Logger.getLogger(Masterdata.class);
+public class MasterdataConverter {
+	final static Logger logger = Logger.getLogger(MasterdataConverter.class);
 
 	public static void main(String[] args) {
 		// MasterDataController mdController = new MasterDataController();
@@ -39,7 +39,7 @@ public class Masterdata {
 	}
 
 	// TODO remove static
-	public void convertPatient(ch.swing.persistence.model.Patient dbPatient) {
+	public void convertPatient(ch.swing.persistence.model.Patient source) {
 
 		// Create a patient object
 		Patient patient = new Patient();
@@ -54,29 +54,29 @@ public class Masterdata {
 		};
 
 		// Add the Birthdate of the Patient
-		patient.getBirthDateElement().setValueAsString(dbPatient.getBirthDate().toString());
+		patient.getBirthDateElement().setValueAsString(source.getBirthDate().toString());
 		// Add the all the identifiers of the Patient
 		patient.addIdentifier().setSystem(CodingSystems.SYSTEM_PATIENT_INTERNAL_ID)
-				.setValue(Integer.toString(dbPatient.getSmisPatientId()));
+				.setValue(Integer.toString(source.getSmisPatientId()));
 		patient.addIdentifier().setSystem(CodingSystems.SYSTEM_PATIENT_EXTERNAL_ID)
-				.setValue(Integer.toString(dbPatient.getSwingPatientId()));
+				.setValue(Integer.toString(source.getSwingPatientId()));
 		patient.addIdentifier().setSystem(CodingSystems.ZSR_OID)
-				.setValue(Integer.toString(dbPatient.getInsuranceCard().getCardNumber()));
+				.setValue(Integer.toString(source.getInsuranceCard().getCardNumber()));
 		// Add the Family and Given Name of the Patient
-		patient.addName().setFamily(dbPatient.getFamilyName()).addGiven(dbPatient.getGivenName());
+		patient.addName().setFamily(source.getFamilyName()).addGiven(source.getGivenName());
 		// Add the Gender of the Patient
-		patient.setGender(genderMap.get(dbPatient.getGender()));
+		patient.setGender(genderMap.get(source.getGender()));
 
 		// Add a new address to the patient
 		final Address patientAddress = new Address() //
-				.setCity(dbPatient.getCity()) //
-				.setPostalCode(Integer.toString(dbPatient.getPostalCode())) //
-				.setCountry(dbPatient.getCountry()).addLine(dbPatient.getRoad());
+				.setCity(source.getCity()) //
+				.setPostalCode(Integer.toString(source.getPostalCode())) //
+				.setCountry(source.getCountry()).addLine(source.getRoad());
 		patient.addAddress(patientAddress);
 
 		// TODO
 		ContactPoint contact = new ContactPoint();
-		// .setSys
+		// contact.set
 
 		// Creates the Contact Details for the Patient
 		List<ContactPoint> contactList = new ArrayList<ContactPoint>();
@@ -86,14 +86,16 @@ public class Masterdata {
 		// Create the Doctor for the Patient
 		Practitioner practitioner = new Practitioner();
 		// Add an address for the doctor
-		final Address practitionerAddress = new Address().setCity(dbPatient.getGeneralPractitioner().getCity())
-				.setPostalCode(Integer.toString(dbPatient.getGeneralPractitioner().getPostalCode()))
-				.setCountry(dbPatient.getGeneralPractitioner().getCountry())
-				.addLine(dbPatient.getGeneralPractitioner().getRoad());
+		final Address practitionerAddress = new Address().setCity(source.getGeneralPractitioner().getCity())
+				.setPostalCode(Integer.toString(source.getGeneralPractitioner().getPostalCode()))
+				.setCountry(source.getGeneralPractitioner().getCountry())
+				.addLine(source.getGeneralPractitioner().getRoad());
 		practitioner.addAddress(practitionerAddress);
 
-		practitioner.addName().setFamily(dbPatient.getGeneralPractitioner().getFamilyName())
-				.addGiven(dbPatient.getGeneralPractitioner().getGivenName());
+		practitioner.addName().setFamily(source.getGeneralPractitioner().getFamilyName())
+				.addGiven(source.getGeneralPractitioner().getGivenName());
+
+		// patient.setGeneralPractitioner(theGeneralPractitioner);
 
 		// TODO practitioner an patient zuweisen
 

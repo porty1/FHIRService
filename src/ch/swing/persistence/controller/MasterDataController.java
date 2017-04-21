@@ -13,7 +13,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import ch.swing.bc.Masterdata;
+import ch.swing.bc.MasterdataConverter;
 import ch.swing.persistence.model.Contact;
 import ch.swing.persistence.model.InsuranceCard;
 import ch.swing.persistence.model.Patient;
