@@ -100,7 +100,7 @@ public class MasterdataConverter {
 		// TODO practitioner an patient zuweisen
 
 		Reference ref = new Reference();
-		// ref.set
+		
 
 		// patient.setGeneralPractitioner(theGeneralPractitioner)
 

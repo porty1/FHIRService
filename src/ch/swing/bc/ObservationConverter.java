@@ -1,5 +1,8 @@
 package ch.swing.bc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.hl7.fhir.dstu3.model.Observation;
 
@@ -16,27 +19,28 @@ public class ObservationConverter {
 	 */
 	public void convertObservation() {
 		Observation observation = new Observation();
-		
+
 	}
 
 	/**
 	 * Sends the observation via FHIR to the SMIS Service
 	 */
 	public void sendObservation() {
-		
+
 	}
 
 	/**
 	 * Retrieves the observation List from the Database
 	 */
 	public void getObservationList() {
-		
+
 	}
 
 	/**
 	 * Retrieves all the Nursing Reports from the System
 	 */
 	public void getObservationNursingReportList() {
-		
+		List<ch.swing.persistence.model.Observation> observationList = new ArrayList<ch.swing.persistence.model.Observation>();
+
 	}
 }
