@@ -17,6 +17,8 @@ import org.hl7.fhir.dstu3.model.Practitioner;
 import org.hl7.fhir.dstu3.model.Reference;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.model.primitive.IdDt;
+import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
 import ch.swing.helper.CodingSystems;
@@ -30,15 +32,16 @@ import ch.swing.persistence.controller.MasterDataController;
 public class MasterdataConverter {
 	final static Logger logger = Logger.getLogger(MasterdataConverter.class);
 
-	public static void main(String[] args) {
-		// MasterDataController mdController = new MasterDataController();
-		// mdController.getPatient(2);
-		// mdController.setCreationDate();
+	private static MasterdataConverter mc = null;
 
-		// createPatient();
+	public static MasterdataConverter getInstance() {
+
+		if (mc == null) {
+			mc = new MasterdataConverter();
+		}
+		return mc;
 	}
 
-	// TODO remove static
 	public void convertPatient(ch.swing.persistence.model.Patient source) {
 
 		// Create a patient object
@@ -100,7 +103,6 @@ public class MasterdataConverter {
 		// TODO practitioner an patient zuweisen
 
 		Reference ref = new Reference();
-		
 
 		// patient.setGeneralPractitioner(theGeneralPractitioner)
 
@@ -117,7 +119,7 @@ public class MasterdataConverter {
 				.setRequest(new BundleEntryRequestComponent().setMethod(HTTPVerb.POST));
 
 		// Log the request
-		System.out.println(ctx.newXmlParser().setPrettyPrint(true).encodeResourceToString(bundle));
+		logger.info(ctx.newXmlParser().setPrettyPrint(true).encodeResourceToString(bundle));
 
 		// Create a client and post the transaction to the server
 		// IGenericClient client =
@@ -135,7 +137,23 @@ public class MasterdataConverter {
 		client.registerInterceptor(authInterceptor);
 
 		// Log the response
-		System.out.println(ctx.newXmlParser().setPrettyPrint(true).encodeResourceToString(resp));
+		logger.info(ctx.newXmlParser().setPrettyPrint(true).encodeResourceToString(resp));
+
+		// ----------------------------------------------------------------------
+
+		// Invoke the server create method (and send pretty-printed JSON
+		// encoding to the server
+		// instead of the default which is non-pretty printed XML)
+		MethodOutcome outcome = client.create().resource(patient).prettyPrint().encodedJson().execute();
+
+		// The MethodOutcome object will contain information about the
+		// response from the server, including the ID of the created
+		// resource, the OperationOutcome response, etc. (assuming that
+		// any of these things were provided by the server! They may not
+		// always be)
+		IdDt id = (IdDt) outcome.getId();
+		logger.info("Got ID: " + id.getValue());
+
 	}
 
 	// Iterates over the Patient result list and send every entry via FHIR to
