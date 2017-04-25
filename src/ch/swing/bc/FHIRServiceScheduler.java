@@ -14,21 +14,29 @@ import org.apache.log4j.Logger;
 public final class FHIRServiceScheduler {
 	final static Logger logger = Logger.getLogger(FHIRServiceScheduler.class);
 
+	// TODO Korrekt?
 	public static void main(String[] args) {
-		Runnable runnable = new Runnable() {
-
+		Runnable runnableMasterData = new Runnable() {
+			@Override
 			public void run() {
-				// task to run goes here
-				System.out.println("Hello !!");
-
-				// TODO Tasks korrekt?
 				MasterdataConverter.getInstance().getPatientList();
-				ObservationConverter.getInstance().getObservationList();
+			}
+		};
+		Runnable runnableObservation = new Runnable() {
+			@Override
+			public void run() {
 				ObservationConverter.getInstance().getObservationNursingReportList();
+				ObservationConverter.getInstance().getObservationList();
+			}
+		};
+		Runnable runnableMedication = new Runnable() {
+			public void run() {
 				MedicationConverter.getInstance().getMedication();
 			}
 		};
-		ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-		service.scheduleAtFixedRate(runnable, 0, 10, TimeUnit.MINUTES);
+		ScheduledExecutorService service = Executors.newScheduledThreadPool(3);
+		service.scheduleAtFixedRate(runnableMasterData, 0, 10, TimeUnit.MINUTES);
+		service.scheduleAtFixedRate(runnableObservation, 0, 10, TimeUnit.MINUTES);
+		service.scheduleAtFixedRate(runnableMedication, 0, 10, TimeUnit.MINUTES);
 	}
 }

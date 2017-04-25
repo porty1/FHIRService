@@ -77,7 +77,7 @@ public class MasterdataConverter {
 				.setCountry(source.getCountry()).addLine(source.getRoad());
 		patient.addAddress(patientAddress);
 
-		// TODO
+		// TODO Add contact point
 		ContactPoint contact = new ContactPoint();
 		// contact.set
 
@@ -98,13 +98,12 @@ public class MasterdataConverter {
 		practitioner.addName().setFamily(source.getGeneralPractitioner().getFamilyName())
 				.addGiven(source.getGeneralPractitioner().getGivenName());
 
-		// patient.setGeneralPractitioner(theGeneralPractitioner);
+		patient.addAddress();
 
-		// TODO practitioner an patient zuweisen
-
-		Reference ref = new Reference();
-
-		// patient.setGeneralPractitioner(theGeneralPractitioner)
+		patient.addGeneralPractitioner(new Reference(
+				String.format("Practitioner/%s", Long.toString(source.getGeneralPractitioner().getContactId()))));
+		patient.setManagingOrganization(
+				new Reference(String.format("Organization/%s", source.getManagingOrganization())));
 
 		sendPatient(patient);
 	}
