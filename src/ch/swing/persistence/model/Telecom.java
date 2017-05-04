@@ -11,9 +11,9 @@ import java.util.Date;
 public class Telecom {
 
 	private int telecomId;
-	private int system;
-	private int value;
-	private Date telecomUse;
+	private String system;
+	private String value;
+	private String telecomUse;
 	private Date creationDate;
 	private Date lastUpdate;
 	private Date deletionDate;
@@ -26,27 +26,27 @@ public class Telecom {
 		this.telecomId = telecomId;
 	}
 
-	public int getSystem() {
-		return system;
-	}
-
-	public void setSystem(int system) {
-		this.system = system;
-	}
-
-	public int getValue() {
+	public String getValue() {
 		return value;
 	}
 
-	public void setValue(int value) {
+	public void setValue(String value) {
 		this.value = value;
 	}
 
-	public Date getTelecomUse() {
+	public String getSystem() {
+		return system;
+	}
+
+	public void setSystem(String system) {
+		this.system = system;
+	}
+
+	public String getTelecomUse() {
 		return telecomUse;
 	}
 
-	public void setTelecomUse(Date telecomUse) {
+	public void setTelecomUse(String telecomUse) {
 		this.telecomUse = telecomUse;
 	}
 

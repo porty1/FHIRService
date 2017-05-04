@@ -5,6 +5,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.hl7.fhir.exceptions.FHIRException;
 
 /**
  * 
@@ -19,7 +20,12 @@ public final class FHIRServiceScheduler {
 		Runnable runnableMasterData = new Runnable() {
 			@Override
 			public void run() {
-				MasterdataConverter.getInstance().getPatientList();
+				try {
+					MasterdataConverter.getInstance().getPatientList();
+				} catch (FHIRException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		};
 		Runnable runnableObservation = new Runnable() {
