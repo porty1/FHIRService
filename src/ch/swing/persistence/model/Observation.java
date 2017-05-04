@@ -12,7 +12,7 @@ public class Observation {
 
 	private int observationId;
 	private Date effectiveDate;
-	private int value;
+	private String value;
 	private String code;
 	private Patient patient;
 	private Date creationDate;
@@ -35,11 +35,11 @@ public class Observation {
 		this.effectiveDate = effectiveDate;
 	}
 
-	public int getValue() {
+	public String getValue() {
 		return value;
 	}
 
-	public void setValue(int value) {
+	public void setValue(String value) {
 		this.value = value;
 	}
 

@@ -1,6 +1,6 @@
 package ch.swing.bc;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,18 +10,20 @@ import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Bundle.BundleEntryRequestComponent;
 import org.hl7.fhir.dstu3.model.Bundle.HTTPVerb;
-import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Practitioner;
 import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.exceptions.FHIRException;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
+import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
 import ch.swing.helper.CodingSystems;
+import ch.swing.helper.ConverterUtils;
 import ch.swing.persistence.controller.MasterDataController;
 
 /**
@@ -42,7 +44,7 @@ public class MasterdataConverter {
 		return mc;
 	}
 
-	public void convertPatient(ch.swing.persistence.model.Patient source) {
+	public void convertPatient(ch.swing.persistence.model.Patient source) throws FHIRException {
 
 		// Create a patient object
 		Patient patient = new Patient();
@@ -76,15 +78,9 @@ public class MasterdataConverter {
 				.setPostalCode(Integer.toString(source.getPostalCode())) //
 				.setCountry(source.getCountry()).addLine(source.getRoad());
 		patient.addAddress(patientAddress);
-
-		// TODO Add contact point
-		ContactPoint contact = new ContactPoint();
-		// contact.set
-
-		// Creates the Contact Details for the Patient
-		List<ContactPoint> contactList = new ArrayList<ContactPoint>();
-		contactList.add(contact);
-		patient.setTelecom(contactList);
+		
+		// Only one telecom object is allowed
+		patient.setTelecom(ConverterUtils.convertTelecom(Arrays.asList(source.getTelecom())));
 
 		// Create the Doctor for the Patient
 		Practitioner practitioner = new Practitioner();
@@ -95,11 +91,15 @@ public class MasterdataConverter {
 				.addLine(source.getGeneralPractitioner().getRoad());
 		practitioner.addAddress(practitionerAddress);
 
+		// Adding the name of the practitioner
 		practitioner.addName().setFamily(source.getGeneralPractitioner().getFamilyName())
 				.addGiven(source.getGeneralPractitioner().getGivenName());
 
-		patient.addAddress();
-
+		//TODO evtl anpassen
+		Reference ref = new Reference();
+		ref.setUserData("generalPractitioner", practitioner);
+		patient.setGeneralPractitioner(Arrays.asList(ref));
+		
 		patient.addGeneralPractitioner(new Reference(
 				String.format("Practitioner/%s", Long.toString(source.getGeneralPractitioner().getContactId()))));
 		patient.setManagingOrganization(
@@ -140,24 +140,34 @@ public class MasterdataConverter {
 
 		// ----------------------------------------------------------------------
 
-		// Invoke the server create method (and send pretty-printed JSON
-		// encoding to the server
-		// instead of the default which is non-pretty printed XML)
-		MethodOutcome outcome = client.create().resource(patient).prettyPrint().encodedJson().execute();
+		try {
+			// Invoke the server create method (and send pretty-printed JSON
+			// encoding to the server
+			// instead of the default which is non-pretty printed XML)
+			MethodOutcome outcome = client.create().resource(patient).prettyPrint().encodedJson().execute();
 
-		// The MethodOutcome object will contain information about the
-		// response from the server, including the ID of the created
-		// resource, the OperationOutcome response, etc. (assuming that
-		// any of these things were provided by the server! They may not
-		// always be)
-		IdDt id = (IdDt) outcome.getId();
-		logger.info("Got ID: " + id.getValue());
+			// The MethodOutcome object will contain information about the
+			// response from the server, including the ID of the created
+			// resource, the OperationOutcome response, etc. (assuming that
+			// any of these things were provided by the server! They may not
+			// always be)
+			IdDt id = (IdDt) outcome.getId();
+
+			// TODO anpassen für Trigger!!
+
+			// if(id != null){
+			// MasterDataController.getInstance().setCreationDate(id);
+			// }
+			logger.info("Got ID: " + id.getValue());
+		} catch (BaseServerResponseException e) {
+			logger.error("FHIR Server Access failed!!", e);
+		}
 
 	}
 
 	// Iterates over the Patient result list and send every entry via FHIR to
 	// the SMIS Service
-	public void getPatientList() {
+	public void getPatientList() throws FHIRException {
 		List<ch.swing.persistence.model.Patient> patientList = MasterDataController.getInstance()
 				.getMasterDataChanges();
 
