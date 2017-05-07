@@ -69,7 +69,7 @@ public class ObservationController extends MasterDataController {
 	        	
 	            int 	observationId = rs.getInt("observationId");
 	            Date	effectiveDate = rs.getDate("effectiveDate");
-	            int		value = rs.getInt("value");
+	            String	value = rs.getString("value");
 	            String 	code = rs.getString("code");
 	            int		idPatient = rs.getInt("idPatient");
 	            Date 	creationDate = rs.getDate("creationDate");
