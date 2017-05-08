@@ -120,7 +120,7 @@ public class MasterDataController {
 		List<Patient> patientList = new ArrayList<Patient>();
 
 		Statement stmt = null;
-		String query = "select * from Patient where CreationDate=" + "NULL";
+		String query = "select * from dbo.Patient WHERE creationDate IS NULL";
 		try {
 
 			stmt = connection.createStatement();

@@ -24,6 +24,7 @@ import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
 import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
 import ch.swing.helper.CodingSystems;
 import ch.swing.helper.ConverterUtils;
+import ch.swing.helper.FHIRServiceException;
 import ch.swing.persistence.controller.MasterDataController;
 
 /**
@@ -58,15 +59,20 @@ public class MasterdataConverter {
 			}
 		};
 
+		patient.setBirthDate(source.getBirthDate());
+
 		// Add the Birthdate of the Patient
-		patient.getBirthDateElement().setValueAsString(source.getBirthDate().toString());
+		// patient.getBirthDateElement().setValueAsString(source.getBirthDate().toString());
 		// Add the all the identifiers of the Patient
 		patient.addIdentifier().setSystem(CodingSystems.SYSTEM_PATIENT_INTERNAL_ID)
 				.setValue(Integer.toString(source.getSmisPatientId()));
 		patient.addIdentifier().setSystem(CodingSystems.SYSTEM_PATIENT_EXTERNAL_ID)
 				.setValue(Integer.toString(source.getSwingPatientId()));
-		patient.addIdentifier().setSystem(CodingSystems.ZSR_OID)
-				.setValue(Integer.toString(source.getInsuranceCard().getCardNumber()));
+		if (source.getInsuranceCard() != null) {
+			patient.addIdentifier().setSystem(CodingSystems.ZSR_OID)
+					.setValue(Integer.toString(source.getInsuranceCard().getCardNumber()));
+		}
+
 		// Add the Family and Given Name of the Patient
 		patient.addName().setFamily(source.getFamilyName()).addGiven(source.getGivenName());
 		// Add the Gender of the Patient
@@ -78,32 +84,36 @@ public class MasterdataConverter {
 				.setPostalCode(Integer.toString(source.getPostalCode())) //
 				.setCountry(source.getCountry()).addLine(source.getRoad());
 		patient.addAddress(patientAddress);
-		
+
 		// Only one telecom object is allowed
-		patient.setTelecom(ConverterUtils.convertTelecom(Arrays.asList(source.getTelecom())));
+		if (source.getTelecom() != null) {
+			patient.setTelecom(ConverterUtils.convertTelecom(Arrays.asList(source.getTelecom())));
+		}
 
 		// Create the Doctor for the Patient
 		Practitioner practitioner = new Practitioner();
 		// Add an address for the doctor
-		final Address practitionerAddress = new Address().setCity(source.getGeneralPractitioner().getCity())
-				.setPostalCode(Integer.toString(source.getGeneralPractitioner().getPostalCode()))
-				.setCountry(source.getGeneralPractitioner().getCountry())
-				.addLine(source.getGeneralPractitioner().getRoad());
-		practitioner.addAddress(practitionerAddress);
+		if (source.getGeneralPractitioner() != null) {
+			final Address practitionerAddress = new Address().setCity(source.getGeneralPractitioner().getCity())
+					.setPostalCode(Integer.toString(source.getGeneralPractitioner().getPostalCode()))
+					.setCountry(source.getGeneralPractitioner().getCountry())
+					.addLine(source.getGeneralPractitioner().getRoad());
+			practitioner.addAddress(practitionerAddress);
 
-		// Adding the name of the practitioner
-		practitioner.addName().setFamily(source.getGeneralPractitioner().getFamilyName())
-				.addGiven(source.getGeneralPractitioner().getGivenName());
+			// Adding the name of the practitioner
+			practitioner.addName().setFamily(source.getGeneralPractitioner().getFamilyName())
+					.addGiven(source.getGeneralPractitioner().getGivenName());
 
-		//TODO evtl anpassen
-		Reference ref = new Reference();
-		ref.setUserData("generalPractitioner", practitioner);
-		patient.setGeneralPractitioner(Arrays.asList(ref));
-		
-		patient.addGeneralPractitioner(new Reference(
-				String.format("Practitioner/%s", Long.toString(source.getGeneralPractitioner().getContactId()))));
-		patient.setManagingOrganization(
-				new Reference(String.format("Organization/%s", source.getManagingOrganization())));
+			// TODO evtl anpassen
+			Reference ref = new Reference();
+			ref.setUserData("generalPractitioner", practitioner);
+			patient.setGeneralPractitioner(Arrays.asList(ref));
+
+			patient.addGeneralPractitioner(new Reference(
+					String.format("Practitioner/%s", Long.toString(source.getGeneralPractitioner().getContactId()))));
+			patient.setManagingOrganization(
+					new Reference(String.format("Organization/%s", source.getManagingOrganization())));
+		}
 
 		sendPatient(patient);
 	}
@@ -167,13 +177,17 @@ public class MasterdataConverter {
 
 	// Iterates over the Patient result list and send every entry via FHIR to
 	// the SMIS Service
-	public void getPatientList() throws FHIRException {
+	public void getPatientList() throws FHIRServiceException, FHIRException {
 		List<ch.swing.persistence.model.old.Patient> patientList = MasterDataController.getInstance()
 				.getMasterDataChanges();
-
-		for (int i = 0; i < patientList.size(); i++) {
-			convertPatient(patientList.get(i));
+		if (patientList != null) {
+			for (int i = 0; i < patientList.size(); i++) {
+				convertPatient(patientList.get(i));
+			}
+		} else {
+			throw new FHIRServiceException("Database empty");
 		}
+
 	}
 
 }

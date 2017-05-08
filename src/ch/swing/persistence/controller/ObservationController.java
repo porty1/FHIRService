@@ -60,7 +60,7 @@ public class ObservationController extends MasterDataController {
 		List<Observation> observationList = new ArrayList<Observation>();
 		
 	    Statement stmt = null;
-	    String query = "select * from Observation where CreationDate="+"NULL";
+	    String query = "select * from Observation where CreationDate IS NULL";
 	    try {
 	    	
 	        stmt = connection.createStatement();

@@ -6,9 +6,11 @@ import org.apache.log4j.Logger;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Bundle.BundleEntryRequestComponent;
 import org.hl7.fhir.dstu3.model.Bundle.HTTPVerb;
+import org.hl7.fhir.dstu3.model.DateTimeType;
 import org.hl7.fhir.dstu3.model.DateType;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.StringType;
+import org.hl7.fhir.exceptions.FHIRException;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.primitive.IdDt;
@@ -17,6 +19,7 @@ import ca.uhn.fhir.rest.client.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
 import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
 import ch.swing.helper.CodingSystems;
+import ch.swing.helper.FHIRServiceException;
 import ch.swing.persistence.controller.NusingReportController;
 import ch.swing.persistence.controller.ObservationController;
 
@@ -53,12 +56,16 @@ public class ObservationConverter {
 				.setValue(Integer.toString(source.getPatient().getSmisPatientId()));
 		observation.addIdentifier().setSystem(CodingSystems.SYSTEM_PATIENT_EXTERNAL_ID)
 				.setValue(Integer.toString(source.getPatient().getSwingPatientId()));
-		observation.addIdentifier().setSystem(CodingSystems.ZSR_OID)
-				.setValue(Integer.toString(source.getPatient().getInsuranceCard().getCardNumber()));
+
+		if (source.getPatient() != null && source.getPatient().getInsuranceCard() != null) {
+			observation.addIdentifier().setSystem(CodingSystems.ZSR_OID)
+					.setValue(Integer.toString(source.getPatient().getInsuranceCard().getCardNumber()));
+		}
 
 		observation.getCode().addCoding().setSystem(VITALDATAURL);
 		observation.setValue(new StringType(source.getValue()));
-		observation.setEffective(new DateType(source.getEffectiveDate()));
+		// observation.setEffective(new DateType(source.getEffectiveDate()));
+		observation.setEffective(new DateTimeType(source.getEffectiveDate()));
 		sendObservation(observation);
 	}
 
@@ -75,12 +82,16 @@ public class ObservationConverter {
 				.setValue(Integer.toString(source.getPatient().getSmisPatientId()));
 		nursingReport.addIdentifier().setSystem(CodingSystems.SYSTEM_PATIENT_EXTERNAL_ID)
 				.setValue(Integer.toString(source.getPatient().getSwingPatientId()));
-		nursingReport.addIdentifier().setSystem(CodingSystems.ZSR_OID)
-				.setValue(Integer.toString(source.getPatient().getInsuranceCard().getCardNumber()));
 
+		if (source.getPatient() != null && source.getPatient().getInsuranceCard() != null) {
+			nursingReport.addIdentifier().setSystem(CodingSystems.ZSR_OID)
+					.setValue(Integer.toString(source.getPatient().getInsuranceCard().getCardNumber()));
+		}
 		nursingReport.getCode().addCoding().setSystem(NURSINGREPORTURL);
 		nursingReport.setValue(new StringType(source.getValue()));
-		nursingReport.setEffective(new DateType(source.getNursingReportDate()));
+		// nursingReport.setEffective(new
+		// DateType(source.getNursingReportDate()));
+		nursingReport.setEffective(new DateTimeType(source.getNursingReportDate()));
 		sendObservation(nursingReport);
 	}
 
@@ -146,25 +157,40 @@ public class ObservationConverter {
 
 	/**
 	 * Retrieves the observation List from the Database
+	 * 
+	 * @throws FHIRException
 	 */
-	public void getObservationList() {
+	public void getObservationList() throws FHIRServiceException {
 		List<ch.swing.persistence.model.old.Observation> observationList = ObservationController.getInstance()
 				.getObservationChanges();
 
-		for (int i = 0; i < observationList.size(); i++) {
-			convertObservation(observationList.get(i));
+		if (observationList != null) {
+			for (int i = 0; i < observationList.size(); i++) {
+				convertObservation(observationList.get(i));
+			}
+		} else {
+			throw new FHIRServiceException("Database List empty!");
 		}
+
 	}
 
 	/**
 	 * Retrieves all the Nursing Reports from the System
+	 * 
+	 * @throws FHIRException
+	 * @throws FHIRServiceException
 	 */
-	public void getObservationNursingReportList() {
+	public void getObservationNursingReportList() throws FHIRServiceException {
 		List<ch.swing.persistence.model.old.NursingReport> nursingReportList = NusingReportController.getInstance()
 				.getNursingReportChanges();
 
-		for (int i = 0; i < nursingReportList.size(); i++) {
-			convertNursingReport(nursingReportList.get(i));
+		if (nursingReportList != null) {
+			for (int i = 0; i < nursingReportList.size(); i++) {
+				convertNursingReport(nursingReportList.get(i));
+			}
+		} else {
+			throw new FHIRServiceException("Database List empty!");
 		}
+
 	}
 }

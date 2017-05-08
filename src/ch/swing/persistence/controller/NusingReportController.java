@@ -60,7 +60,7 @@ public class NusingReportController extends MasterDataController{
 		List<NursingReport> nursingReportList = new ArrayList<NursingReport>();
 		
 	    Statement stmt = null;
-	    String query = "select * from NursingReport where CreationDate="+"NULL";
+	    String query = "select * from NursingReport where creationDate IS NULL";
 	    try {
 	    	
 	        stmt = connection.createStatement();

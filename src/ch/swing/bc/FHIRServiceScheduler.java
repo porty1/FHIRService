@@ -7,6 +7,8 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.hl7.fhir.exceptions.FHIRException;
 
+import ch.swing.helper.FHIRServiceException;
+
 /**
  * 
  * @author Yannis Portmann
@@ -16,14 +18,10 @@ public final class FHIRServiceScheduler {
 	final static Logger logger = Logger.getLogger(FHIRServiceScheduler.class);
 
 	// TODO Korrekt?
-	public static void main(String[] args) {
-		try {
-			MasterdataConverter.getInstance().getPatientList();
-		} catch (FHIRException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+	public static void main(String[] args) throws FHIRException, FHIRServiceException {
+		MasterdataConverter.getInstance().getPatientList();
+		ObservationConverter.getInstance().getObservationNursingReportList();
+		ObservationConverter.getInstance().getObservationList();
 		
 //		Runnable runnableMasterData = new Runnable() {
 //			@Override
