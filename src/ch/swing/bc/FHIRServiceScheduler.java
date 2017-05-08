@@ -17,32 +17,40 @@ public final class FHIRServiceScheduler {
 
 	// TODO Korrekt?
 	public static void main(String[] args) {
-		Runnable runnableMasterData = new Runnable() {
-			@Override
-			public void run() {
-				try {
-					MasterdataConverter.getInstance().getPatientList();
-				} catch (FHIRException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		};
-		Runnable runnableObservation = new Runnable() {
-			@Override
-			public void run() {
-				ObservationConverter.getInstance().getObservationNursingReportList();
-				ObservationConverter.getInstance().getObservationList();
-			}
-		};
-		Runnable runnableMedication = new Runnable() {
-			public void run() {
-				MedicationConverter.getInstance().getMedication();
-			}
-		};
-		ScheduledExecutorService service = Executors.newScheduledThreadPool(3);
-		service.scheduleAtFixedRate(runnableMasterData, 0, 10, TimeUnit.MINUTES);
-		service.scheduleAtFixedRate(runnableObservation, 0, 10, TimeUnit.MINUTES);
-		service.scheduleAtFixedRate(runnableMedication, 0, 10, TimeUnit.MINUTES);
+		try {
+			MasterdataConverter.getInstance().getPatientList();
+		} catch (FHIRException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+//		Runnable runnableMasterData = new Runnable() {
+//			@Override
+//			public void run() {
+//				try {
+//					MasterdataConverter.getInstance().getPatientList();
+//				} catch (FHIRException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//		};
+//		Runnable runnableObservation = new Runnable() {
+//			@Override
+//			public void run() {
+//				ObservationConverter.getInstance().getObservationNursingReportList();
+//				ObservationConverter.getInstance().getObservationList();
+//			}
+//		};
+//		Runnable runnableMedication = new Runnable() {
+//			public void run() {
+//				MedicationConverter.getInstance().getMedication();
+//			}
+//		};
+//		ScheduledExecutorService service = Executors.newScheduledThreadPool(3);
+//		service.scheduleAtFixedRate(runnableMasterData, 0, 10, TimeUnit.MINUTES);
+//		service.scheduleAtFixedRate(runnableObservation, 0, 10, TimeUnit.MINUTES);
+//		service.scheduleAtFixedRate(runnableMedication, 0, 10, TimeUnit.MINUTES);
 	}
 }

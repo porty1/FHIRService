@@ -3,7 +3,7 @@ package ch.swing.test;
 import org.apache.log4j.Logger;
 
 import ch.swing.persistence.controller.MasterDataController;
-import ch.swing.persistence.model.Patient;
+import ch.swing.persistence.model.old.Patient;
 import junit.framework.TestCase;
 
 public class Test_MaterDataController extends TestCase {

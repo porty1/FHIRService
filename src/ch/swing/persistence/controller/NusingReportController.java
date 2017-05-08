@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.swing.persistence.model.NursingReport;
+import ch.swing.persistence.model.old.NursingReport;
 
 public class NusingReportController extends MasterDataController{
 

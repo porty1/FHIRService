@@ -8,7 +8,7 @@ import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse;
 import org.hl7.fhir.exceptions.FHIRException;
 
-import ch.swing.persistence.model.Telecom;
+import ch.swing.persistence.model.old.Telecom;
 
 public final class ConverterUtils {
 

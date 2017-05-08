@@ -14,10 +14,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import ch.swing.bc.MasterdataConverter;
-import ch.swing.persistence.model.Contact;
-import ch.swing.persistence.model.InsuranceCard;
-import ch.swing.persistence.model.Patient;
-import ch.swing.persistence.model.Telecom;
+import ch.swing.persistence.model.old.Contact;
+import ch.swing.persistence.model.old.InsuranceCard;
+import ch.swing.persistence.model.old.Patient;
+import ch.swing.persistence.model.old.Telecom;
 
 /**
  * This class implements all methods which are used in the CaseView GUI to
