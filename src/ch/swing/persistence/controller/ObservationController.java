@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.swing.persistence.model.old.Observation;
+import ch.swing.persistence.model.Observation;
 
 public class ObservationController extends MasterDataController {
 	

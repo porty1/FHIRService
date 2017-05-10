@@ -1,9 +1,5 @@
 package ch.swing.bc;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.log4j.Logger;
 import org.hl7.fhir.exceptions.FHIRException;
 
@@ -17,7 +13,6 @@ import ch.swing.helper.FHIRServiceException;
 public final class FHIRServiceScheduler {
 	final static Logger logger = Logger.getLogger(FHIRServiceScheduler.class);
 
-	// TODO Korrekt?
 	public static void main(String[] args) throws FHIRException, FHIRServiceException {
 		MasterdataConverter.getInstance().getPatientList();
 		ObservationConverter.getInstance().getObservationNursingReportList();

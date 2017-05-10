@@ -48,7 +48,7 @@ public class ObservationConverter {
 	/**
 	 * Converts the vital data to a FHIR observation object
 	 */
-	public void convertObservation(ch.swing.persistence.model.old.Observation source) {
+	public void convertObservation(ch.swing.persistence.model.Observation source) {
 		Observation observation = new Observation();
 
 		// Add the all the identifiers of the Patient
@@ -74,7 +74,7 @@ public class ObservationConverter {
 	 * 
 	 * @param source
 	 */
-	public void convertNursingReport(ch.swing.persistence.model.old.NursingReport source) {
+	public void convertNursingReport(ch.swing.persistence.model.NursingReport source) {
 		Observation nursingReport = new Observation();
 
 		// Add the all the identifiers of the Patient
@@ -161,7 +161,7 @@ public class ObservationConverter {
 	 * @throws FHIRException
 	 */
 	public void getObservationList() throws FHIRServiceException {
-		List<ch.swing.persistence.model.old.Observation> observationList = ObservationController.getInstance()
+		List<ch.swing.persistence.model.Observation> observationList = ObservationController.getInstance()
 				.getObservationChanges();
 
 		if (observationList != null) {
@@ -181,7 +181,7 @@ public class ObservationConverter {
 	 * @throws FHIRServiceException
 	 */
 	public void getObservationNursingReportList() throws FHIRServiceException {
-		List<ch.swing.persistence.model.old.NursingReport> nursingReportList = NusingReportController.getInstance()
+		List<ch.swing.persistence.model.NursingReport> nursingReportList = NusingReportController.getInstance()
 				.getNursingReportChanges();
 
 		if (nursingReportList != null) {

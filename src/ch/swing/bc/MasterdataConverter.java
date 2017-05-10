@@ -45,7 +45,7 @@ public class MasterdataConverter {
 		return mc;
 	}
 
-	public void convertPatient(ch.swing.persistence.model.old.Patient source) throws FHIRException {
+	public void convertPatient(ch.swing.persistence.model.Patient source) throws FHIRException {
 
 		// Create a patient object
 		Patient patient = new Patient();
@@ -178,7 +178,7 @@ public class MasterdataConverter {
 	// Iterates over the Patient result list and send every entry via FHIR to
 	// the SMIS Service
 	public void getPatientList() throws FHIRServiceException, FHIRException {
-		List<ch.swing.persistence.model.old.Patient> patientList = MasterDataController.getInstance()
+		List<ch.swing.persistence.model.Patient> patientList = MasterDataController.getInstance()
 				.getMasterDataChanges();
 		if (patientList != null) {
 			for (int i = 0; i < patientList.size(); i++) {
