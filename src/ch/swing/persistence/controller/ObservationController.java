@@ -56,9 +56,7 @@ public class ObservationController extends MasterDataController {
 	
 	public  List<Observation> getObservationChanges ()
 	   {
-		Observation observation = new Observation();
 		List<Observation> observationList = new ArrayList<Observation>();
-		
 	    Statement stmt = null;
 	    String query = "select * from Observation where CreationDate IS NULL";
 	    try {
@@ -66,7 +64,7 @@ public class ObservationController extends MasterDataController {
 	        stmt = connection.createStatement();
 	        ResultSet rs = stmt.executeQuery(query);
 	        while (rs.next()) {
-	        	
+	        	Observation observation = new Observation();
 	            int 	observationId = rs.getInt("observationId");
 	            Date	effectiveDate = rs.getDate("effectiveDate");
 	            String	value = rs.getString("value");

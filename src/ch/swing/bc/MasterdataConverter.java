@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Bundle.BundleEntryRequestComponent;
+import org.hl7.fhir.dstu3.model.Bundle.BundleType;
 import org.hl7.fhir.dstu3.model.Bundle.HTTPVerb;
 import org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.dstu3.model.Patient;
@@ -64,8 +65,11 @@ public class MasterdataConverter {
 		// Add the Birthdate of the Patient
 		// patient.getBirthDateElement().setValueAsString(source.getBirthDate().toString());
 		// Add the all the identifiers of the Patient
-		patient.addIdentifier().setSystem(CodingSystems.SYSTEM_PATIENT_INTERNAL_ID)
-				.setValue(Integer.toString(source.getSmisPatientId()));
+		if (source.getSmisPatientId() != 0) {
+			patient.addIdentifier().setSystem(CodingSystems.SYSTEM_PATIENT_INTERNAL_ID)
+					.setValue(Integer.toString(source.getSmisPatientId()));
+		}
+
 		patient.addIdentifier().setSystem(CodingSystems.SYSTEM_PATIENT_EXTERNAL_ID)
 				.setValue(Integer.toString(source.getSwingPatientId()));
 		if (source.getInsuranceCard() != null) {
@@ -122,28 +126,27 @@ public class MasterdataConverter {
 		// Creating the FHIR DSTU3 Context
 		FhirContext ctx = FhirContext.forDstu3();
 		Bundle bundle = new Bundle();
-		// bundle.setType(BundleTypeEnum.TRANSACTION);
+		bundle.setType(BundleType.TRANSACTION);
 
-		bundle.addEntry().setFullUrl("Test").setResource(patient)
+		// Create an HTTP basic auth interceptor
+		String username = "2064905440277";
+		String password = "Test1234.";
+		BasicAuthInterceptor authInterceptor = new BasicAuthInterceptor(username, password);
+
+		// Create a client and post the transaction to the server
+		// IGenericClient client =
+		// ctx.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3");
+		IGenericClient client = ctx.newRestfulGenericClient("https://smis-test.arpage.ch/smis2-importer/fhir/Patient");
+		// Register the interceptor with your client (either style)
+		client.registerInterceptor(authInterceptor);
+
+		bundle.addEntry().setFullUrl("https://smis-test.arpage.ch/smis2-importer/fhir/Patient").setResource(patient)
 				.setRequest(new BundleEntryRequestComponent().setMethod(HTTPVerb.POST));
 
 		// Log the request
 		logger.info(ctx.newXmlParser().setPrettyPrint(true).encodeResourceToString(bundle));
 
-		// Create a client and post the transaction to the server
-		// IGenericClient client =
-		// ctx.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3");
-		IGenericClient client = ctx.newRestfulGenericClient("https://smis-test.arpage.ch/smis2-importer/fhir");
-
 		Bundle resp = client.transaction().withBundle(bundle).execute();
-
-		// Create an HTTP basic auth interceptor
-		String username = "2064905437901";
-		String password = "Test1234.";
-		BasicAuthInterceptor authInterceptor = new BasicAuthInterceptor(username, password);
-
-		// Register the interceptor with your client (either style)
-		client.registerInterceptor(authInterceptor);
 
 		// Log the response
 		logger.info(ctx.newXmlParser().setPrettyPrint(true).encodeResourceToString(resp));

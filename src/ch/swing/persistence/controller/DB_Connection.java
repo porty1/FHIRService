@@ -24,7 +24,8 @@ import java.sql.SQLException;
  * <br>
  */
 public class DB_Connection {
-	// defining database connection information which we need for allowing us the connection
+		//TODO Credentials auslagern
+		// defining database connection information which we need for allowing us the connection
 		private static String DB_URL = "jdbc:sqlserver://vmbalios.bfh.ch:1433;DatabaseName=Swing";
 		private static String DB_USER = "Swing";
 		private static String DB_PASSWORD = "GOLf1720";
@@ -61,7 +62,7 @@ public class DB_Connection {
 		public Connection getConnection() throws SQLException {
 						Connection connection = DriverManager.getConnection(DB_URL, DB_USER,
 			                DB_PASSWORD);
-						System.err.println("The connection is successfully obtained");
+						System.out.println("The connection is successfully obtained");
 			        return connection;
 			    }
 

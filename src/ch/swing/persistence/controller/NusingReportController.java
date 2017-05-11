@@ -56,17 +56,14 @@ public class NusingReportController extends MasterDataController{
 	
 	public  List<NursingReport> getNursingReportChanges ()
 	   {
-		NursingReport nursingReport = new NursingReport();
 		List<NursingReport> nursingReportList = new ArrayList<NursingReport>();
-		
 	    Statement stmt = null;
 	    String query = "select * from NursingReport where creationDate IS NULL";
 	    try {
-	    	
 	        stmt = connection.createStatement();
 	        ResultSet rs = stmt.executeQuery(query);
 	        while (rs.next()) {
-	        	
+	        	NursingReport nursingReport = new NursingReport();
 	            int 	nursingReportId = rs.getInt("nursingReportId");
 	            Date	nursingReportDate = rs.getDate("nursingReportDate");
 	            String 	value = rs.getString("value");
