@@ -59,7 +59,7 @@ public class ObservationConverter {
 
 		if (source.getPatient() != null && source.getPatient().getInsuranceCard() != null) {
 			observation.addIdentifier().setSystem(CodingSystems.ZSR_OID)
-					.setValue(Integer.toString(source.getPatient().getInsuranceCard().getCardNumber()));
+					.setValue(source.getPatient().getInsuranceCard().getCardNumber());
 		}
 
 		observation.getCode().addCoding().setSystem(VITALDATAURL);
@@ -85,7 +85,7 @@ public class ObservationConverter {
 
 		if (source.getPatient() != null && source.getPatient().getInsuranceCard() != null) {
 			nursingReport.addIdentifier().setSystem(CodingSystems.ZSR_OID)
-					.setValue(Integer.toString(source.getPatient().getInsuranceCard().getCardNumber()));
+					.setValue(source.getPatient().getInsuranceCard().getCardNumber());
 		}
 		nursingReport.getCode().addCoding().setSystem(NURSINGREPORTURL);
 		nursingReport.setValue(new StringType(source.getValue()));

@@ -11,7 +11,7 @@ import java.util.Date;
 public class InsuranceCard {
 
 	private int insuranceCardId;
-	private int cardNumber;
+	private String cardNumber;
 	private Date validFrom;
 	private Date validTo;
 	private String insurance;
@@ -19,20 +19,20 @@ public class InsuranceCard {
 	private Date lastUpdate;
 	private Date deletionDate;
 
+	public String getCardNumber() {
+		return cardNumber;
+	}
+
+	public void setCardNumber(String cardNumber) {
+		this.cardNumber = cardNumber;
+	}
+
 	public int getInsuranceCardId() {
 		return insuranceCardId;
 	}
 
 	public void setInsuranceCardId(int insuranceCardId) {
 		this.insuranceCardId = insuranceCardId;
-	}
-
-	public int getCardNumber() {
-		return cardNumber;
-	}
-
-	public void setCardNumber(int cardNumber) {
-		this.cardNumber = cardNumber;
 	}
 
 	public Date getValidFrom() {

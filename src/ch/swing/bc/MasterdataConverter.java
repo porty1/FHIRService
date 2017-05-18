@@ -8,7 +8,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.Bundle;
-import org.hl7.fhir.dstu3.model.Bundle.BundleEntryRequestComponent;
 import org.hl7.fhir.dstu3.model.Bundle.BundleType;
 import org.hl7.fhir.dstu3.model.Bundle.HTTPVerb;
 import org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender;
@@ -74,7 +73,7 @@ public class MasterdataConverter {
 				.setValue(Integer.toString(source.getSwingPatientId()));
 		if (source.getInsuranceCard() != null) {
 			patient.addIdentifier().setSystem(CodingSystems.ZSR_OID)
-					.setValue(Integer.toString(source.getInsuranceCard().getCardNumber()));
+					.setValue(source.getInsuranceCard().getCardNumber());
 		}
 
 		// Add the Family and Given Name of the Patient
@@ -113,8 +112,8 @@ public class MasterdataConverter {
 			ref.setUserData("generalPractitioner", practitioner);
 			patient.setGeneralPractitioner(Arrays.asList(ref));
 
-			patient.addGeneralPractitioner(new Reference(
-					String.format("Practitioner/%s", Long.toString(source.getGeneralPractitioner().getContactId()))));
+//			patient.addGeneralPractitioner(new Reference(
+//					String.format("Practitioner/%s", Long.toString(source.getGeneralPractitioner().getContactId()))));
 			patient.setManagingOrganization(
 					new Reference(String.format("Organization/%s", source.getManagingOrganization())));
 		}
@@ -136,12 +135,12 @@ public class MasterdataConverter {
 		// Create a client and post the transaction to the server
 		// IGenericClient client =
 		// ctx.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3");
-		IGenericClient client = ctx.newRestfulGenericClient("https://smis-test.arpage.ch/smis2-importer/fhir/Patient");
+		IGenericClient client = ctx.newRestfulGenericClient("https://smis-test.arpage.ch/smis2-importer/fhir");
 		// Register the interceptor with your client (either style)
 		client.registerInterceptor(authInterceptor);
 
-		bundle.addEntry().setFullUrl("https://smis-test.arpage.ch/smis2-importer/fhir/Patient").setResource(patient)
-				.setRequest(new BundleEntryRequestComponent().setMethod(HTTPVerb.POST));
+		bundle.addEntry().setFullUrl(patient.getId()).setResource(patient).getRequest().setUrl("Patient")
+				.setMethod(HTTPVerb.GET);
 
 		// Log the request
 		logger.info(ctx.newXmlParser().setPrettyPrint(true).encodeResourceToString(bundle));

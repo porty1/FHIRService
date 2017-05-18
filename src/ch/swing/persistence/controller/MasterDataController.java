@@ -222,24 +222,22 @@ public class MasterDataController {
 	public InsuranceCard getInsuranceCard(int insuranceCardId) {
 
 		Statement stmt = null;
-		String query = "select * from InsuranceCard where insuranceCardId=" + insuranceCardId;
+		String query = "select * from dbo.InsuranceCard where insuranceCardId=" + insuranceCardId;
 		try {
-
 			stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next()) {
 				InsuranceCard insuranceCard = new InsuranceCard();
 				int InsuranceCardID = rs.getInt("insuranceCardId");
-				int cardNumber = rs.getInt("cardNumber");
-				Date validFrom = rs.getDate("smisPatientId");
-				Date validTo = rs.getDate("valdiFrom");
-				String insurance = rs.getString("validFrom");
+				String cardNumber = rs.getString("cardNumber");
+				Date validFrom = rs.getDate("validFrom");
+				Date validTo = rs.getDate("validTo");
+				String insurance = rs.getString("insurance");
 				Date creationDate = rs.getDate("creationDate");
 				Date lastUpdate = rs.getDate("lastUpdate");
 				Date deletionDate = rs.getDate("deletionDate");
 
 				insuranceCard.setInsuranceCardId(InsuranceCardID);
-				;
 				insuranceCard.setCardNumber(cardNumber);
 				insuranceCard.setValidFrom(validFrom);
 				insuranceCard.setValidTo(validTo);
@@ -276,17 +274,17 @@ public class MasterDataController {
 			while (rs.next()) {
 				Telecom telecom = new Telecom();
 				int idTelecom = rs.getInt("telecomId");
-				int system = rs.getInt("system");
-				int value = rs.getInt("value");
-				Date telecomUse = rs.getDate("telecomUse");
+				String system = rs.getString("system");
+				String value = rs.getString("value");
+				String telecomUse = rs.getString("telecomUse");
 				Date creationDate = rs.getDate("creationDate");
 				Date lastUpdate = rs.getDate("lastUpdate");
 				Date deletionDate = rs.getDate("deletionDate");
 
 				telecom.setTelecomId(idTelecom);
-				// telecom.setSystem(system);
-				// telecom.setValue(value);
-				// telecom.setTelecomUse(telecomUse);
+				telecom.setSystem(system);
+				telecom.setValue(value);
+				telecom.setTelecomUse(telecomUse);
 				telecom.setCreationDate(creationDate);
 				telecom.setLastUpdate(lastUpdate);
 				telecom.setDeletionDate(deletionDate);
