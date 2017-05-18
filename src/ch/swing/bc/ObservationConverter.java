@@ -53,7 +53,7 @@ public class ObservationConverter {
 
 		// Add the all the identifiers of the Patient
 		observation.addIdentifier().setSystem(CodingSystems.SYSTEM_PATIENT_INTERNAL_ID)
-				.setValue(Integer.toString(source.getPatient().getSmisPatientId()));
+				.setValue(Long.toString(source.getPatient().getSmisPatientId()));
 		observation.addIdentifier().setSystem(CodingSystems.SYSTEM_PATIENT_EXTERNAL_ID)
 				.setValue(Integer.toString(source.getPatient().getSwingPatientId()));
 
@@ -79,7 +79,7 @@ public class ObservationConverter {
 
 		// Add the all the identifiers of the Patient
 		nursingReport.addIdentifier().setSystem(CodingSystems.SYSTEM_PATIENT_INTERNAL_ID)
-				.setValue(Integer.toString(source.getPatient().getSmisPatientId()));
+				.setValue(Long.toString(source.getPatient().getSmisPatientId()));
 		nursingReport.addIdentifier().setSystem(CodingSystems.SYSTEM_PATIENT_EXTERNAL_ID)
 				.setValue(Integer.toString(source.getPatient().getSwingPatientId()));
 

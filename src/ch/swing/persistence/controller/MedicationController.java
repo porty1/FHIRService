@@ -1,9 +1,8 @@
 package ch.swing.persistence.controller;
 
-import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 
@@ -32,23 +31,31 @@ public class MedicationController {
 	/**
 	 * Save all the medication PDF's in the database
 	 * 
-	 * @param in
+	 * @param medicationFile
 	 * @param idPatient
 	 */
-	public void saveMedication(InputStream in, int idPatient) {
-		String query = "INSERT INTO medication (medication, idPatient) VALUES (" + in + "," + idPatient + ");";
-		Statement stmt = null;
+	public void saveMedication(byte[] medicationFile, int idPatient) {
+
+		PreparedStatement pstmt = null;
 		try {
-			stmt = connection.createStatement();
-			// stmt.executeQuery(query);
-			stmt.executeQuery(query);
+			String INSERT_RECORD = "insert into medication(idPatient, medication, creationDate) values(?, ?, ?)";
+			pstmt = connection.prepareStatement(INSERT_RECORD);
+			// Insert the Patient ID
+			pstmt.setInt(1, idPatient);
+			// Insert the medication PDF File
+			pstmt.setBytes(2, medicationFile);
+			// Insert the current Date as creationDate
+			java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
+			pstmt.setDate(3, sqlDate);
+			// Execute the changes
+			pstmt.executeUpdate();
 
 		} catch (SQLException err) {
 			System.out.println(err.getMessage());
 		} finally {
-			if (stmt != null) {
+			if (pstmt != null) {
 				try {
-					stmt.close();
+					pstmt.close();
 				} catch (SQLException err) {
 					System.out.println(err.getMessage());
 				}

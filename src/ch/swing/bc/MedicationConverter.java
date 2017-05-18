@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.log4j.Logger;
 
@@ -54,7 +55,7 @@ public class MedicationConverter {
 	 * @param SMISPatientId
 	 * @param patientId
 	 */
-	public void getPDFFromURL(String orgId, int SMISPatientId, int patientId) {
+	public void getPDFFromURL(String orgId, Long SMISPatientId, int patientId) {
 		// https://smis-test.arpage.ch:443/smis2-core/orgs/{orgId}/patients/{patientId}/mediPlan?dateFrom=yyyymmdd&dateTo=yyyydd
 
 		// TODO Konfiguration auslagern
@@ -75,8 +76,13 @@ public class MedicationConverter {
 			getRequest.addHeader("Authorization", "Basic " + getBasicAuthenticationEncoding());
 			URL url = new URL(urlSMISString);
 			InputStream in = url.openStream();
+			//TODO FIle parsen
+			
+			byte[] medicationFile = IOUtils.toByteArray(in);
+			
 
-			MedicationController.getInstance().saveMedication(in, patientId);
+
+			MedicationController.getInstance().saveMedication(medicationFile, patientId);
 			// Files.copy(in, Paths.get("medication.pdf"),
 			// StandardCopyOption.REPLACE_EXISTING);
 			in.close();

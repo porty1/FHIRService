@@ -12,7 +12,7 @@ public class Patient {
 
 	private int patientId;
 	private int swingPatientId;
-	private int smisPatientId;
+	private Long smisPatientId;
 	private InsuranceCard insuranceCard;
 	private int active;
 	private String title;
@@ -48,14 +48,6 @@ public class Patient {
 
 	public void setSwingPatientId(int swingPatientId) {
 		this.swingPatientId = swingPatientId;
-	}
-
-	public int getSmisPatientId() {
-		return smisPatientId;
-	}
-
-	public void setSmisPatientId(int smisPatientId) {
-		this.smisPatientId = smisPatientId;
 	}
 
 	public InsuranceCard getInsuranceCard() {
@@ -208,6 +200,14 @@ public class Patient {
 
 	public void setDeletionDate(Date deletionDate) {
 		this.deletionDate = deletionDate;
+	}
+
+	public Long getSmisPatientId() {
+		return smisPatientId;
+	}
+
+	public void setSmisPatientId(Long smisPatientId) {
+		this.smisPatientId = smisPatientId;
 	}
 
 }

@@ -83,7 +83,7 @@ public class MasterDataController {
 				Patient patient = new Patient();
 				int patientId = rs.getInt("patientId");
 				int swingPatientId = rs.getInt("swingPatientId");
-				int smisPatientId = rs.getInt("smisPatientId");
+				Long smisPatientId = rs.getLong("smisPatientId");
 				int idSocialInsuranceCard = rs.getInt("idSocialInsuranceCard");
 				int active = rs.getInt("active");
 				String title = rs.getString("title");
@@ -158,7 +158,7 @@ public class MasterDataController {
 				Patient patient = new Patient();
 				int patientId = rs.getInt("patientId");
 				int swingPatientId = rs.getInt("swingPatientId");
-				int smisPatientId = rs.getInt("smisPatientId");
+				Long smisPatientId = rs.getLong("smisPatientId");
 				int idSocialInsuranceCard = rs.getInt("idSocialInsuranceCard");
 				int active = rs.getInt("active");
 				String title = rs.getString("title");
@@ -408,7 +408,7 @@ public class MasterDataController {
 				Patient patient = new Patient();
 				int patientId = rs.getInt("patientId");
 				int swingPatientId = rs.getInt("swingPatientId");
-				int smisPatientId = rs.getInt("smisPatientId");
+				Long smisPatientId = rs.getLong("smisPatientId");
 
 				patient.setPatientId(patientId);
 				patient.setSwingPatientId(swingPatientId);

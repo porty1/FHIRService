@@ -1,5 +1,6 @@
 package ch.swing.bc;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -66,7 +67,7 @@ public class MasterdataConverter {
 		// Add the all the identifiers of the Patient
 		if (source.getSmisPatientId() != 0) {
 			patient.addIdentifier().setSystem(CodingSystems.SYSTEM_PATIENT_INTERNAL_ID)
-					.setValue(Integer.toString(source.getSmisPatientId()));
+					.setValue(Long.toString(source.getSmisPatientId()));
 		}
 
 		patient.addIdentifier().setSystem(CodingSystems.SYSTEM_PATIENT_EXTERNAL_ID)
