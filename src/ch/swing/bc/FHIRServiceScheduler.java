@@ -14,10 +14,10 @@ public final class FHIRServiceScheduler {
 	final static Logger logger = Logger.getLogger(FHIRServiceScheduler.class);
 
 	public static void main(String[] args) throws FHIRException, FHIRServiceException {
-//		MasterdataConverter.getInstance().getPatientList();
+		MasterdataConverter.getInstance().getPatientList();
 //		ObservationConverter.getInstance().getObservationNursingReportList();
 //		ObservationConverter.getInstance().getObservationList();
-		MedicationConverter.getInstance().getMedication();
+//		MedicationConverter.getInstance().getMedication();
 		
 //		Runnable runnableMasterData = new Runnable() {
 //			@Override

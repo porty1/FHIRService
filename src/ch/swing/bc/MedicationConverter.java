@@ -40,9 +40,8 @@ public class MedicationConverter {
 	}
 
 	private String getBasicAuthenticationEncoding() {
-		//TODO
-		String username = "";
-		String password = "";
+		String username = "2064905440277";
+		String password = "Test1234.";
 
 		String userPassword = username + ":" + password;
 		return new String(Base64.encodeBase64(userPassword.getBytes()));
@@ -76,15 +75,8 @@ public class MedicationConverter {
 			getRequest.addHeader("Authorization", "Basic " + getBasicAuthenticationEncoding());
 			URL url = new URL(urlSMISString);
 			InputStream in = url.openStream();
-			//TODO FIle parsen
-			
 			byte[] medicationFile = IOUtils.toByteArray(in);
-			
-
-
 			MedicationController.getInstance().saveMedication(medicationFile, patientId);
-			// Files.copy(in, Paths.get("medication.pdf"),
-			// StandardCopyOption.REPLACE_EXISTING);
 			in.close();
 		} catch (IOException e) {
 			logger.error(e.getStackTrace());

@@ -2,6 +2,7 @@ package ch.swing.persistence.controller;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -419,17 +420,81 @@ public class MasterDataController {
 
 			return patientList;
 		} catch (SQLException err) {
-			System.out.println(err.getMessage());
+			logger.error(err.getStackTrace());
 		} finally {
 			if (stmt != null) {
 				try {
 					stmt.close();
 				} catch (SQLException err) {
-					System.out.println(err.getMessage());
+					logger.error(err.getStackTrace());
 				}
 			}
 		}
 		return null;
 
+	}
+
+	/**
+	 * Updates the SMIS Identifier in the Connection Database
+	 * 
+	 * @param SMISID
+	 * @param patientId
+	 */
+	public void updateIdentifier(long SMISID, int patientId) {
+
+		PreparedStatement pstmt = null;
+		try {
+			String insert_record = "UPDATE dbo.Patient SET smisPatientId = ? WHERE patientId = ?";
+			pstmt = connection.prepareStatement(insert_record);
+
+			pstmt.setLong(1, SMISID);
+			pstmt.setInt(2, patientId);
+			pstmt.executeUpdate();
+			logger.info("Patient with ID:" + patientId + "was succesfully updated");
+
+		} catch (SQLException err) {
+			logger.error(err.getStackTrace());
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException err) {
+					logger.error(err.getStackTrace());
+				}
+			}
+		}
+	}
+
+	/**
+	 * Updates the creation Date in the Patients record
+	 * 
+	 * @param patientId
+	 */
+	public void updateCreationDate(int patientId) {
+
+		PreparedStatement pstmt = null;
+		try {
+			String update_record = "UPDATE dbo.Patient SET creationDate = ? WHERE patientId = ?";
+			pstmt = connection.prepareStatement(update_record);
+
+			pstmt.setInt(1, patientId);
+
+			java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
+			pstmt.setDate(2, sqlDate);
+
+			pstmt.executeUpdate();
+			logger.info("Patient with ID:" + patientId + "was succesfully updated");
+
+		} catch (SQLException err) {
+			logger.error(err.getStackTrace());
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException err) {
+					logger.error(err.getStackTrace());
+				}
+			}
+		}
 	}
 }
