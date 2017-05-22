@@ -1,5 +1,10 @@
 package ch.swing.helper;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender;
+
 public final class CodingSystems {
 
 	/**
@@ -18,7 +23,16 @@ public final class CodingSystems {
 
 	// TODO Patrick muss Link noch liefern
 	public static final String NURSINGREPORTURL = "http://smis.ch/fhir/types/memo";
-	
+
 	public static final String VITALDATAURL = "http://smis.ch/fhir/types/memo";
 
+	// TODO Funktioniert so noch nicht
+	@SuppressWarnings("serial")
+	public static final Map<Short, AdministrativeGender> GENDERMAP = new HashMap<Short, AdministrativeGender>() {
+		{
+			put((short) 0, AdministrativeGender.UNKNOWN);
+			put((short) 99, AdministrativeGender.FEMALE);
+			put((short) 100, AdministrativeGender.MALE);
+		}
+	};
 }

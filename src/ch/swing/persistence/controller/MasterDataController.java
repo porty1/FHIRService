@@ -129,9 +129,9 @@ public class MasterDataController {
 				patient.setDeletionDate(deletionDate);
 
 				patientList.add(patient);
-
-				return patientList;
 			}
+			return patientList;
+
 		} catch (SQLException err) {
 			System.out.println(err.getMessage());
 		} finally {
@@ -220,8 +220,12 @@ public class MasterDataController {
 
 	}
 
+	/**
+	 * 
+	 * @param insuranceCardId
+	 * @return
+	 */
 	public InsuranceCard getInsuranceCard(int insuranceCardId) {
-
 		Statement stmt = null;
 		String query = "select * from dbo.InsuranceCard where insuranceCardId=" + insuranceCardId;
 		try {
@@ -264,12 +268,16 @@ public class MasterDataController {
 
 	}
 
+	/**
+	 * 
+	 * @param telecomId
+	 * @return
+	 */
 	public Telecom getTelecom(int telecomId) {
 
 		Statement stmt = null;
 		String query = "select * from Telecom where telecomId=" + telecomId;
 		try {
-
 			stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next()) {
@@ -307,12 +315,15 @@ public class MasterDataController {
 
 	}
 
+	/**
+	 * 
+	 * @param cId
+	 * @return
+	 */
 	public Contact getGeneralPractitioner(int cId) {
-
 		Statement stmt = null;
 		String query = "select * from Contact where contactId=" + cId;
 		try {
-
 			stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next()) {
@@ -397,6 +408,10 @@ public class MasterDataController {
 
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public List<Patient> getIDPatients() {
 		ArrayList<Patient> patientList = new ArrayList<Patient>();
 		Statement stmt = null;
@@ -450,7 +465,7 @@ public class MasterDataController {
 			pstmt.setLong(1, SMISID);
 			pstmt.setInt(2, patientId);
 			pstmt.executeUpdate();
-			logger.info("Patient with ID:" + patientId + "was succesfully updated");
+			logger.info("Patient with ID:" + patientId + " was succesfully updated (SMIS ID)");
 
 		} catch (SQLException err) {
 			logger.error(err.getStackTrace());
@@ -471,19 +486,17 @@ public class MasterDataController {
 	 * @param patientId
 	 */
 	public void updateCreationDate(int patientId) {
-
 		PreparedStatement pstmt = null;
 		try {
 			String update_record = "UPDATE dbo.Patient SET creationDate = ? WHERE patientId = ?";
 			pstmt = connection.prepareStatement(update_record);
 
-			pstmt.setInt(1, patientId);
-
 			java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
-			pstmt.setDate(2, sqlDate);
+			pstmt.setDate(1, sqlDate);
+			pstmt.setInt(2, patientId);
 
 			pstmt.executeUpdate();
-			logger.info("Patient with ID:" + patientId + "was succesfully updated");
+			logger.info("Patient with ID:" + patientId + " was succesfully updated (creationDate)");
 
 		} catch (SQLException err) {
 			logger.error(err.getStackTrace());
