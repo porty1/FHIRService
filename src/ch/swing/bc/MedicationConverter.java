@@ -10,6 +10,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.log4j.Logger;
 
+import ch.swing.helper.Configuration;
 import ch.swing.persistence.controller.MasterDataController;
 import ch.swing.persistence.controller.MedicationController;
 import ch.swing.persistence.model.Patient;
@@ -32,18 +33,14 @@ public class MedicationConverter {
 	 */
 	public void getMedication() {
 		List<Patient> patientList = MasterDataController.getInstance().getIDPatients();
-		final String orgId = "1457020138649054";
 
 		for (int i = 0; i < patientList.size(); i++) {
-			getPDFFromURL(orgId, patientList.get(i).getSmisPatientId(), patientList.get(i).getPatientId());
+			getPDFFromURL(patientList.get(i).getSmisPatientId(), patientList.get(i).getPatientId());
 		}
 	}
 
 	private String getBasicAuthenticationEncoding() {
-		String username = "2064905440277";
-		String password = "Test1234.";
-
-		String userPassword = username + ":" + password;
+		String userPassword = Configuration.MEDICATIONUSERNAME + ":" + Configuration.MEDICATIONPASSWORD;
 		return new String(Base64.encodeBase64(userPassword.getBytes()));
 	}
 
@@ -54,22 +51,12 @@ public class MedicationConverter {
 	 * @param SMISPatientId
 	 * @param patientId
 	 */
-	public void getPDFFromURL(String orgId, Long SMISPatientId, int patientId) {
+	public void getPDFFromURL(Long SMISPatientId, int patientId) {
 		// https://smis-test.arpage.ch:443/smis2-core/orgs/{orgId}/patients/{patientId}/mediPlan?dateFrom=yyyymmdd&dateTo=yyyydd
 
-		// TODO Konfiguration auslagern
-		// try {
-		// FileInputStream inputStream = new FileInputStream("test.txt");
-		// String everything = IOUtils.toString(inputStream, "UTF-8");
-		// } catch (IOException e) {
-		// logger.error(e.getStackTrace());
-		// }
-
-		final String dateFrom = "20170101";
-		final String dateTo = "20180101";
-
-		final String urlSMISString = "https://smis-test.arpage.ch:443/smis2-core/orgs/" + orgId + "/patients/"
-				+ SMISPatientId + "/mediPlan?dateFrom=" + dateFrom + "&dateTo=" + dateTo;
+		final String urlSMISString = Configuration.MEDICATIONURL + Configuration.MEDICATIONORGID + "/patients/"
+				+ SMISPatientId + "/mediPlan?dateFrom=" + Configuration.MEDICATIONDATEFROM + "&dateTo="
+				+ Configuration.MEDICATIONDATETO;
 		try {
 			HttpGet getRequest = new HttpGet(urlSMISString);
 			getRequest.addHeader("Authorization", "Basic " + getBasicAuthenticationEncoding());

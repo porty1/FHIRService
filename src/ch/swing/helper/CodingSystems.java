@@ -16,4 +16,9 @@ public final class CodingSystems {
 
 	public static final String SYSTEM_PATIENT_EXTERNAL_ID = "http://smis.ch/fhir/patient/external_id";
 
+	// TODO Patrick muss Link noch liefern
+	public static final String NURSINGREPORTURL = "http://smis.ch/fhir/types/memo";
+	
+	public static final String VITALDATAURL = "http://smis.ch/fhir/types/memo";
+
 }

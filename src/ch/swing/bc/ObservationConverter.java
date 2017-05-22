@@ -6,8 +6,8 @@ import org.apache.log4j.Logger;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Bundle.BundleEntryRequestComponent;
 import org.hl7.fhir.dstu3.model.Bundle.HTTPVerb;
+import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.DateTimeType;
-import org.hl7.fhir.dstu3.model.DateType;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.StringType;
 import org.hl7.fhir.exceptions.FHIRException;
@@ -19,6 +19,7 @@ import ca.uhn.fhir.rest.client.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
 import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
 import ch.swing.helper.CodingSystems;
+import ch.swing.helper.Configuration;
 import ch.swing.helper.FHIRServiceException;
 import ch.swing.persistence.controller.NusingReportController;
 import ch.swing.persistence.controller.ObservationController;
@@ -30,10 +31,6 @@ import ch.swing.persistence.controller.ObservationController;
  */
 public class ObservationConverter {
 	final static Logger logger = Logger.getLogger(ObservationConverter.class);
-
-	// TODO Patrick muss Link noch liefern
-	private final String NURSINGREPORTURL = "http://smis.ch/fhir/types/memo";
-	private final String VITALDATAURL = "http://smis.ch/fhir/types/memo";
 
 	private static ObservationConverter mc = null;
 
@@ -62,7 +59,7 @@ public class ObservationConverter {
 					.setValue(source.getPatient().getInsuranceCard().getCardNumber());
 		}
 
-		observation.getCode().addCoding().setSystem(VITALDATAURL);
+		observation.getCode().addCoding().setSystem(CodingSystems.VITALDATAURL);
 		observation.setValue(new StringType(source.getValue()));
 		// observation.setEffective(new DateType(source.getEffectiveDate()));
 		observation.setEffective(new DateTimeType(source.getEffectiveDate()));
@@ -87,7 +84,7 @@ public class ObservationConverter {
 			nursingReport.addIdentifier().setSystem(CodingSystems.ZSR_OID)
 					.setValue(source.getPatient().getInsuranceCard().getCardNumber());
 		}
-		nursingReport.getCode().addCoding().setSystem(NURSINGREPORTURL);
+		nursingReport.getCode().addCoding().setSystem(CodingSystems.NURSINGREPORTURL);
 		nursingReport.setValue(new StringType(source.getValue()));
 		// nursingReport.setEffective(new
 		// DateType(source.getNursingReportDate()));
@@ -113,14 +110,13 @@ public class ObservationConverter {
 		// Create a client and post the transaction to the server
 		// IGenericClient client =
 		// ctx.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3");
-		IGenericClient client = ctx.newRestfulGenericClient("https://smis-test.arpage.ch/smis2-importer/fhir");
+		IGenericClient client = ctx.newRestfulGenericClient(Configuration.FHIRSERVERURL);
 
 		Bundle resp = client.transaction().withBundle(bundle).execute();
 
 		// Create an HTTP basic auth interceptor
-		String username = "2064905437901";
-		String password = "Test1234.";
-		BasicAuthInterceptor authInterceptor = new BasicAuthInterceptor(username, password);
+		BasicAuthInterceptor authInterceptor = new BasicAuthInterceptor(Configuration.FHIRUSERNAME,
+				Configuration.FHIRPASSWORD);
 
 		// Register the interceptor with your client (either style)
 		client.registerInterceptor(authInterceptor);

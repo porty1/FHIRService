@@ -12,6 +12,7 @@ import ca.uhn.fhir.rest.client.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
 import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
 import ch.swing.helper.CodingSystems;
+import ch.swing.helper.Configuration;
 import ch.swing.helper.FHIRServiceException;
 import ch.swing.persistence.controller.MasterDataController;
 
@@ -122,15 +123,12 @@ public class MasterdataConverter {
 		// bundle.setType(BundleType.TRANSACTION);
 
 		// Create an HTTP basic auth interceptor
-		String serverURL = "https://smis-test.arpage.ch/smis2-importer/fhir";
-		String username = "2064905424321";
-		String password = "Test1234.";
-		BasicAuthInterceptor authInterceptor = new BasicAuthInterceptor(username, password);
+		BasicAuthInterceptor authInterceptor = new BasicAuthInterceptor(Configuration.FHIRUSERNAME, Configuration.FHIRPASSWORD);
 
 		// Create a client and post the transaction to the server
 		// IGenericClient client =
 		// ctx.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3");
-		IGenericClient client = ctx.newRestfulGenericClient(serverURL);
+		IGenericClient client = ctx.newRestfulGenericClient(Configuration.FHIRSERVERURL);
 		// Register the interceptor with your client (either style)
 		client.registerInterceptor(authInterceptor);
 
