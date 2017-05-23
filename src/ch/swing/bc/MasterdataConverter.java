@@ -8,6 +8,7 @@ import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Practitioner;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.exceptions.FHIRException;
 
 import ca.uhn.fhir.context.FhirContext;
@@ -90,33 +91,28 @@ public class MasterdataConverter {
 			patient.setTelecom(ConverterUtils.convertTelecom(Arrays.asList(source.getTelecom())));
 		}
 
-		Practitioner practitioner = new Practitioner();
-		if (source.getGeneralPractitioner() != null) {
-			final Address practitionerAddress = new Address().setCity(source.getGeneralPractitioner().getCity())
-					.setPostalCode(Integer.toString(source.getGeneralPractitioner().getPostalCode()))
-					.setCountry(source.getGeneralPractitioner().getCountry())
-					.addLine(source.getGeneralPractitioner().getRoad());
-			practitioner.addAddress(practitionerAddress);
-		}
+//		Practitioner practitioner = new Practitioner();
+//		if (source.getGeneralPractitioner() != null) {
+//			final Address practitionerAddress = new Address().setCity(source.getGeneralPractitioner().getCity())
+//					.setPostalCode(Integer.toString(source.getGeneralPractitioner().getPostalCode()))
+//					.setCountry(source.getGeneralPractitioner().getCountry())
+//					.addLine(source.getGeneralPractitioner().getRoad());
+//			practitioner.addAddress(practitionerAddress);
+//		}
 		// Adding the name of the practitioner
-		practitioner.addName().setFamily(source.getGeneralPractitioner().getFamilyName())
-				.addGiven(source.getGeneralPractitioner().getGivenName());
+//		practitioner.addName().setFamily(source.getGeneralPractitioner().getFamilyName())
+//				.addGiven(source.getGeneralPractitioner().getGivenName());
 
 		// TODO evtl anpassen
 		// Reference ref = new Reference();
 		// ref.setUserData("generalPractitioner", practitioner);
 		// patient.setGeneralPractitioner(Arrays.asList(ref));
 
-		// patient.setGeneralPractitioner(Arrays
-		// .asList(new Reference(String.format("General Practitioner",
-		// source.getGeneralPractitioner()))));
-		// patient.addGeneralPractitioner(new Reference(
-		// String.format("Practitioner/%s",
-		// Long.toString(source.getGeneralPractitioner().getContactId()))));
 		// patient.setManagingOrganization(
 		// new Reference(String.format("Organization/%s",
 		// source.getManagingOrganization())));
 		// }
+
 		sendPatient(patient, source.getPatientId());
 	}
 

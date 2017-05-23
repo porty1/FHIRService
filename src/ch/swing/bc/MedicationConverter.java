@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
+import org.apache.catalina.tribes.util.Arrays;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.HttpGet;
@@ -63,10 +64,16 @@ public class MedicationConverter {
 			URL url = new URL(urlSMISString);
 			InputStream in = url.openStream();
 			byte[] medicationFile = IOUtils.toByteArray(in);
-			MedicationController.getInstance().saveMedication(medicationFile, patientId);
+			byte[] dbMedication = MedicationController.getInstance().getMedication(patientId);
+
+			if (Arrays.equals(medicationFile, dbMedication)) {
+				logger.info("The Medication is up to date!");
+			} else {
+				MedicationController.getInstance().saveMedication(medicationFile, patientId);
+			}
 			in.close();
 		} catch (IOException e) {
-			logger.error(e.getStackTrace());
+			logger.error(e.getStackTrace() + e.getMessage());
 		}
 	}
 }

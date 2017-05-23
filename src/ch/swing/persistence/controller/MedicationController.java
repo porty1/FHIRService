@@ -2,7 +2,9 @@ package ch.swing.persistence.controller;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 
@@ -24,7 +26,7 @@ public class MedicationController {
 		try {
 			connection = dc.getConnection();
 		} catch (SQLException e) {
-			System.err.println("There was an error getting the connection: " + e.getMessage());
+			logger.error(e.getStackTrace());
 		}
 	}
 
@@ -51,16 +53,40 @@ public class MedicationController {
 			pstmt.executeUpdate();
 
 		} catch (SQLException err) {
-			System.out.println(err.getMessage());
+			logger.error(err.getStackTrace());
 		} finally {
 			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException err) {
-					System.out.println(err.getMessage());
+					logger.error(err.getStackTrace());
 				}
 			}
 		}
 	}
 
+	public byte[] getMedication(int patientId) {
+		Statement stmt = null;
+		String query = "select * from dbo.Medication where idPatient=" + patientId;
+		try {
+			stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next()) {
+				byte[] medication = rs.getBytes("medication");
+				return medication;
+			}
+		} catch (SQLException err) {
+			logger.error(err.getStackTrace() + err.getMessage());
+		} finally {
+			if (stmt != null) {
+				try {
+					stmt.close();
+				} catch (SQLException err) {
+					logger.error(err.getStackTrace());
+				}
+			}
+		}
+		return null;
+
+	}
 }
