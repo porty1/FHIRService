@@ -18,7 +18,7 @@ public class Patient {
 	private String title;
 	private String givenName;
 	private String familyName;
-	private Telecom telecom;
+	//private Telecom telecom;
 	// 0=male;1=female
 	private int gender;
 	private Date birthDate;
@@ -33,6 +33,8 @@ public class Patient {
 	private Date creationDate;
 	private Date lastUpdate;
 	private Date deletionDate;
+	private String telecom;
+	private String socialInsuranceNumber;
 
 	public int getPatientId() {
 		return patientId;
@@ -88,14 +90,6 @@ public class Patient {
 
 	public void setFamilyName(String familyName) {
 		this.familyName = familyName;
-	}
-
-	public Telecom getTelecom() {
-		return telecom;
-	}
-
-	public void setTelecom(Telecom telecom) {
-		this.telecom = telecom;
 	}
 
 	public int getGender() {
@@ -208,6 +202,22 @@ public class Patient {
 
 	public void setSmisPatientId(Long smisPatientId) {
 		this.smisPatientId = smisPatientId;
+	}
+
+	public String getTelecom() {
+		return telecom;
+	}
+
+	public void setTelecom(String telecom) {
+		this.telecom = telecom;
+	}
+
+	public String getSocialInsuranceNumber() {
+		return socialInsuranceNumber;
+	}
+
+	public void setSocialInsuranceNumber(String socialInsuranceNumber) {
+		this.socialInsuranceNumber = socialInsuranceNumber;
 	}
 
 }

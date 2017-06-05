@@ -16,37 +16,6 @@ import ch.swing.persistence.model.InsuranceCard;
 import ch.swing.persistence.model.Patient;
 import ch.swing.persistence.model.Telecom;
 
-/**
- * This class implements all methods which are used in the CaseView GUI to
- * communicate with the database. There are getter methods<br>
- * and update methods implemented in JDBC. <br>
- * <br>
- * 
- * @author Shpend Vladi<br>
- *         <br>
- * 
- *         instance variables:<br>
- *         - PatientCaseController pc <br>
- *         - DB_Connection dc <br>
- *         - Connection connection <br>
- *         <br>
- * 
- *         Methods:<br>
- *         - String getPersonName (int pid)<br>
- *         - String getCaseID (int pid)<br>
- *         - Date getFromDate (int caseID)<br>
- *         - Date getToDate (int caseID)<br>
- *         - String getAnamnesis (int caseID)<br>
- *         - String getDiagnosis (int caseID)<br>
- *         - upDateName(String firstname, String lastname, int pid)<br>
- *         - upDateFromDate(Date FromDate, int caseID)<br>
- *         - upDateToDate(Date ToDate, int caseID)<br>
- *         - upDateAnamnesis(String anamnesis, int caseID)<br>
- *         - upDateDiagnosis(String diagnosis, int caseID)<br>
- * 
- *         <br>
- */
-
 public class MasterDataController {
 	final static Logger logger = Logger.getLogger(MasterDataController.class);
 
@@ -90,7 +59,7 @@ public class MasterDataController {
 				String title = rs.getString("title");
 				String givenName = rs.getString("givenName");
 				String familyName = rs.getString("familyName");
-				int idTelecom = rs.getInt("idTelecom");
+				// int idTelecom = rs.getInt("idTelecom");
 				int gender = rs.getInt("gender");
 				Date birthDate = rs.getDate("birthDate");
 				Date deceasedDate = rs.getDate("deceasedDate");
@@ -104,6 +73,8 @@ public class MasterDataController {
 				Date creationDate = rs.getDate("creationDate");
 				Date lastUpdate = rs.getDate("lastUpdate");
 				Date deletionDate = rs.getDate("deletionDate");
+				String telecom = rs.getString("telecom");
+				String socialInsuranceNumber = rs.getString("socialInsuranceNumber");
 
 				patient.setPatientId(patientId);
 				patient.setSwingPatientId(swingPatientId);
@@ -113,7 +84,7 @@ public class MasterDataController {
 				patient.setTitle(title);
 				patient.setGivenName(givenName);
 				patient.setFamilyName(familyName);
-				patient.setTelecom(getTelecom(idTelecom));
+				// patient.setTelecom(getTelecom(idTelecom));
 				patient.setGender(gender);
 				patient.setBirthDate(birthDate);
 				patient.setDeceasedDate(deceasedDate);
@@ -127,6 +98,8 @@ public class MasterDataController {
 				patient.setCreationDate(creationDate);
 				patient.setLastUpdate(lastUpdate);
 				patient.setDeletionDate(deletionDate);
+				patient.setTelecom(telecom);
+				patient.setSocialInsuranceNumber(socialInsuranceNumber);
 
 				patientList.add(patient);
 			}
@@ -165,7 +138,7 @@ public class MasterDataController {
 				String title = rs.getString("title");
 				String givenName = rs.getString("givenName");
 				String familyName = rs.getString("familyName");
-				int idTelecom = rs.getInt("idTelecom");
+				// int idTelecom = rs.getInt("idTelecom");
 				int gender = rs.getInt("gender");
 				Date birthDate = rs.getDate("birthDate");
 				Date deceasedDate = rs.getDate("deceasedDate");
@@ -179,6 +152,8 @@ public class MasterDataController {
 				Date creationDate = rs.getDate("creationDate");
 				Date lastUpdate = rs.getDate("lastUpdate");
 				Date deletionDate = rs.getDate("deletionDate");
+				String telecom = rs.getString("telecom");
+				String socialInsuranceNumber = rs.getString("socialInsuranceNumber");
 
 				patient.setPatientId(patientId);
 				patient.setSwingPatientId(swingPatientId);
@@ -188,7 +163,8 @@ public class MasterDataController {
 				patient.setTitle(title);
 				patient.setGivenName(givenName);
 				patient.setFamilyName(familyName);
-				patient.setTelecom(getTelecom(idTelecom));
+				// patient.setTelecom(getTelecom(idTelecom));
+				patient.setTelecom(telecom);
 				patient.setGender(gender);
 				patient.setBirthDate(birthDate);
 				patient.setDeceasedDate(deceasedDate);
@@ -202,6 +178,7 @@ public class MasterDataController {
 				patient.setCreationDate(creationDate);
 				patient.setLastUpdate(lastUpdate);
 				patient.setDeletionDate(deletionDate);
+				patient.setSocialInsuranceNumber(socialInsuranceNumber);
 
 				return patient;
 			}
@@ -312,7 +289,6 @@ public class MasterDataController {
 			}
 		}
 		return null;
-
 	}
 
 	/**

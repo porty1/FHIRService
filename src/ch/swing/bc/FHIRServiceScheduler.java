@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.hl7.fhir.exceptions.FHIRException;
 
+import ch.swing.helper.Configuration;
 import ch.swing.helper.FHIRServiceException;
 
 /**
@@ -49,9 +50,8 @@ public final class FHIRServiceScheduler {
 			}
 		};
 		ScheduledExecutorService service = Executors.newScheduledThreadPool(3);
-		service.scheduleAtFixedRate(runnableMasterData, 0, 1, TimeUnit.MINUTES);
-		// service.scheduleAtFixedRate(runnableObservation, 0, 10,
-		// TimeUnit.MINUTES);
-		service.scheduleAtFixedRate(runnableMedication, 0, 1, TimeUnit.MINUTES);
+		service.scheduleAtFixedRate(runnableMasterData, 0, Configuration.SCHEDULERMINUTES, TimeUnit.MINUTES);
+		service.scheduleAtFixedRate(runnableObservation, 0, Configuration.SCHEDULERMINUTES, TimeUnit.MINUTES);
+		service.scheduleAtFixedRate(runnableMedication, 0, Configuration.SCHEDULERMINUTES, TimeUnit.MINUTES);
 	}
 }

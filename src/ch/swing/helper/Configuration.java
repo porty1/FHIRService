@@ -8,22 +8,41 @@ package ch.swing.helper;
  */
 public class Configuration {
 
-	// Database
+	// ------------- Database Settings -------------
+	// ---------------------------------------------
+	// URL of the Connection Database
 	public static final String DBURL = "jdbc:sqlserver://vmbalios.bfh.ch:1433;DatabaseName=Swing";
+	// Username for the Connection Database
 	public static final String DBUSER = "Swing";
+	// Password for the Connection Database
 	public static final String DBPASSWORD = "GOLf1720";
 
-	// Medication
+	// ------------- Medication Settings -------------
+	// -----------------------------------------------
+	// From Date for the Medication
 	public static final String MEDICATIONDATEFROM = "20170101";
+	// To Date for the Medication
 	public static final String MEDICATIONDATETO = "20180101";
+	// URL for the Medication
 	public static final String MEDICATIONURL = "https://smis-test.arpage.ch:443/smis2-core/orgs/";
+	// Username to view the Medication (Administrator)
 	public static final String MEDICATIONUSERNAME = "2064905440277";
+	// Password to view the Medication
 	public static final String MEDICATIONPASSWORD = "Test1234.";
+	// Organisation ID in the SMIS System
 	public static final String MEDICATIONORGID = "1457020138649054";
-	
-	//Masterdata
+
+	// ------------- Masterdata Settings -------------
+	// -----------------------------------------------
+	// FHIR Server URL from the SMIS System
 	public static final String FHIRSERVERURL = "https://smis-test.arpage.ch/smis2-importer/fhir";
+	// Username for the FHIR Server
 	public static final String FHIRUSERNAME = "2064905424321";
+	// Password for the FHIR Server
 	public static final String FHIRPASSWORD = "Test1234.";
 
+	// ------------- Scheduler Settings -------------
+	// ---------------------------------------------
+	// Configuration for the transfer time frame
+	public static final Integer SCHEDULERMINUTES = 1;
 }

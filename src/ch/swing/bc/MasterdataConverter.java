@@ -7,8 +7,6 @@ import org.apache.log4j.Logger;
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.dstu3.model.Patient;
-import org.hl7.fhir.dstu3.model.Practitioner;
-import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.exceptions.FHIRException;
 
 import ca.uhn.fhir.context.FhirContext;
@@ -20,6 +18,7 @@ import ch.swing.helper.Configuration;
 import ch.swing.helper.ConverterUtils;
 import ch.swing.helper.FHIRServiceException;
 import ch.swing.persistence.controller.MasterDataController;
+import ch.swing.persistence.model.Telecom;
 
 /**
  * 
@@ -51,9 +50,6 @@ public class MasterdataConverter {
 		// Create a patient object
 		Patient patient = new Patient();
 
-		patient.setBirthDate(source.getBirthDate());
-
-		// Add the Birthdate of the Patient
 		// patient.getBirthDateElement().setValueAsString(source.getBirthDate().toString());
 		// Add the all the identifiers of the Patient
 		if (source.getSmisPatientId() != 0) {
@@ -64,14 +60,13 @@ public class MasterdataConverter {
 		patient.addIdentifier().setSystem(CodingSystems.SYSTEM_PATIENT_EXTERNAL_ID)
 				.setValue(Integer.toString(source.getSwingPatientId()));
 		if (source.getInsuranceCard() != null) {
-			patient.addIdentifier().setSystem(CodingSystems.ZSR_OID)
-					.setValue(source.getInsuranceCard().getCardNumber());
+			patient.addIdentifier().setSystem(CodingSystems.ZSR_OID).setValue(source.getSocialInsuranceNumber());
 		}
 
-		// Add the Family and Given Name of the Patient
+		patient.setBirthDate(source.getBirthDate());
 		patient.addName().setFamily(source.getFamilyName()).addGiven(source.getGivenName());
 
-		// Add the Gender of the Patient
+		// Add the Gender of the Patient this is converted from the SWING Coding
 		if (source.getGender() == 99) {
 			patient.setGender(AdministrativeGender.FEMALE);
 		} else if (source.getGender() == 100) {
@@ -80,39 +75,22 @@ public class MasterdataConverter {
 			patient.setGender(AdministrativeGender.UNKNOWN);
 		}
 
-		// Add a new address to the patient
 		final Address patientAddress = new Address().setCity(source.getCity())
 				.setPostalCode(Integer.toString(source.getPostalCode())).setCountry(source.getCountry())
 				.addLine(source.getRoad());
 		patient.addAddress(patientAddress);
 
-		// Only one telecom object is allowed
+		// Needs to be adapted in a further step
+		// It is now static to match the FHIR requirements
+		Telecom telecom = new Telecom();
+		telecom.setSystem("PHONE");
+		telecom.setTelecomUse("HOME");
+		telecom.setValue(source.getTelecom());
+
+		// Only one telecom object is allowed from the SMIS Service
 		if (source.getTelecom() != null) {
-			patient.setTelecom(ConverterUtils.convertTelecom(Arrays.asList(source.getTelecom())));
+			patient.setTelecom(ConverterUtils.convertTelecom(Arrays.asList(telecom)));
 		}
-
-//		Practitioner practitioner = new Practitioner();
-//		if (source.getGeneralPractitioner() != null) {
-//			final Address practitionerAddress = new Address().setCity(source.getGeneralPractitioner().getCity())
-//					.setPostalCode(Integer.toString(source.getGeneralPractitioner().getPostalCode()))
-//					.setCountry(source.getGeneralPractitioner().getCountry())
-//					.addLine(source.getGeneralPractitioner().getRoad());
-//			practitioner.addAddress(practitionerAddress);
-//		}
-		// Adding the name of the practitioner
-//		practitioner.addName().setFamily(source.getGeneralPractitioner().getFamilyName())
-//				.addGiven(source.getGeneralPractitioner().getGivenName());
-
-		// TODO evtl anpassen
-		// Reference ref = new Reference();
-		// ref.setUserData("generalPractitioner", practitioner);
-		// patient.setGeneralPractitioner(Arrays.asList(ref));
-
-		// patient.setManagingOrganization(
-		// new Reference(String.format("Organization/%s",
-		// source.getManagingOrganization())));
-		// }
-
 		sendPatient(patient, source.getPatientId());
 	}
 
@@ -120,7 +98,7 @@ public class MasterdataConverter {
 		// Creating the FHIR DSTU3 Context
 		FhirContext ctx = FhirContext.forDstu3();
 
-		// Create an HTTP basic auth interceptor
+		// Create an HTTP basic auth interceptor with the credentials
 		BasicAuthInterceptor authInterceptor = new BasicAuthInterceptor(Configuration.FHIRUSERNAME,
 				Configuration.FHIRPASSWORD);
 
@@ -132,9 +110,9 @@ public class MasterdataConverter {
 		final MethodOutcome outcome;
 		outcome = client.create().resource(patient).execute();
 		logger.info("SMIS ID: " + outcome.getId().getIdPart());
-		// Update the SMIS ID in the Database
+		// Update the SMIS ID in the Database for further changes
 		MasterDataController.getInstance().updateIdentifier(Long.parseLong(outcome.getId().getIdPart()), patientId);
-		// Update the creation Date in the Database
+		// Update the creation Date in the Database because of the Trigger
 		MasterDataController.getInstance().updateCreationDate(patientId);
 	}
 
@@ -144,8 +122,8 @@ public class MasterdataConverter {
 		if (patientList != null) {
 			return patientList;
 		} else {
-			throw new FHIRServiceException("Database empty");
+			logger.info("Database is empty");
+			throw new FHIRServiceException("Database is empty");
 		}
 	}
-
 }
