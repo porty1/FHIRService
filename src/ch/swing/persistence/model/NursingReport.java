@@ -17,6 +17,15 @@ public class NursingReport {
 	private Date creationDate;
 	private Date lastUpdate;
 	private Date deletionDate;
+	private Date sendDate;
+
+	public Date getSendDate() {
+		return sendDate;
+	}
+
+	public void setSendDate(Date sendDate) {
+		this.sendDate = sendDate;
+	}
 
 	public int getNursingReportId() {
 		return nursingReportId;

@@ -83,8 +83,8 @@ public class MasterdataConverter {
 		// Needs to be adapted in a further step
 		// It is now static to match the FHIR requirements
 		Telecom telecom = new Telecom();
-		telecom.setSystem("PHONE");
-		telecom.setTelecomUse("HOME");
+		telecom.setSystem("phone");
+		telecom.setTelecomUse("home");
 		telecom.setValue(source.getTelecom());
 
 		// Only one telecom object is allowed from the SMIS Service

@@ -41,6 +41,10 @@ public class Configuration {
 	// Password for the FHIR Server
 	public static final String FHIRPASSWORD = "Test1234.";
 
+	// ------------- Observation Settings -------------
+	// ------------------------------------------------
+	public static final String FHIRSERVEROBSERVATIONURL = "https://smis-test.arpage.ch/smis2-importer/fhir/Observation";
+
 	// ------------- Scheduler Settings -------------
 	// ---------------------------------------------
 	// Configuration for the transfer time frame

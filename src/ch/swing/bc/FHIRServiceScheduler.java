@@ -20,10 +20,9 @@ public final class FHIRServiceScheduler {
 
 	public static void main(String[] args) throws FHIRException, FHIRServiceException {
 
-		// MasterdataConverter.getInstance().startMasterdataConverter();
-
-		// ObservationConverter.getInstance().getObservationNursingReportList();
-		// ObservationConverter.getInstance().getObservationList();
+		MasterdataConverter.getInstance().startMasterdataConverter();
+//		ObservationConverter.getInstance().startObservationConverter();
+		ObservationConverter.getInstance().startNursingReportConverter();
 
 		Runnable runnableMasterData = new Runnable() {
 			@Override
