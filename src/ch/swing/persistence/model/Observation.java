@@ -19,6 +19,7 @@ public class Observation {
 	private Date lastUpdate;
 	private Date deletionDate;
 	private Date sendDate;
+	private Long smisObservationId;
 
 	public Date getSendDate() {
 		return sendDate;
@@ -90,5 +91,13 @@ public class Observation {
 
 	public void setDeletionDate(Date deletionDate) {
 		this.deletionDate = deletionDate;
+	}
+
+	public Long getSmisObservationId() {
+		return smisObservationId;
+	}
+
+	public void setSmisObservationId(Long smisObservationId) {
+		this.smisObservationId = smisObservationId;
 	}
 }

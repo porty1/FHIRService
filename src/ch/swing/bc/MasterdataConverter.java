@@ -46,40 +46,43 @@ public class MasterdataConverter {
 
 	}
 
-	public void convertPatient(ch.swing.persistence.model.Patient source) throws FHIRException {
+	public void convertPatient(ch.swing.persistence.model.Patient source) throws FHIRException, FHIRServiceException {
 		// Create a patient object
 		Patient patient = new Patient();
 
-		// patient.getBirthDateElement().setValueAsString(source.getBirthDate().toString());
-		// Add the all the identifiers of the Patient
+		// All the required fields need to be != null to send the patient to the
+		// SMIS Webservice
+		if (source.getFamilyName() != null && source.getGivenName() != null && source.getBirthDate() != null
+				&& source.getSwingPatientId() != 0 && source.getGender() != 0 && source.getPostalCode() != 0) {
+			patient.addName().setFamily(source.getFamilyName()).addGiven(source.getGivenName());
+			patient.setBirthDate(source.getBirthDate());
+			patient.addIdentifier().setSystem(CodingSystems.SYSTEM_PATIENT_EXTERNAL_ID) //
+					.setValue(Integer.toString(source.getSwingPatientId()));
+			final Address patientAddress = new Address().setCity(source.getCity())
+					.setPostalCode(Integer.toString(source.getPostalCode())).setCountry(source.getCountry())
+					.addLine(source.getRoad());
+			patient.addAddress(patientAddress);
+			// Add the Gender of the Patient this is converted from the SWING
+			// Coding
+			if (source.getGender() == 99) {
+				patient.setGender(AdministrativeGender.FEMALE);
+			} else if (source.getGender() == 100) {
+				patient.setGender(AdministrativeGender.MALE);
+			} else {
+				patient.setGender(AdministrativeGender.UNKNOWN);
+			}
+		} else {
+			throw new FHIRServiceException("Required field missing");
+		}
+		// SMIS ID
 		if (source.getSmisPatientId() != 0) {
 			patient.addIdentifier().setSystem(CodingSystems.SYSTEM_PATIENT_INTERNAL_ID)
 					.setValue(Long.toString(source.getSmisPatientId()));
 		}
-
-		patient.addIdentifier().setSystem(CodingSystems.SYSTEM_PATIENT_EXTERNAL_ID)
-				.setValue(Integer.toString(source.getSwingPatientId()));
-		if (source.getInsuranceCard() != null) {
-			patient.addIdentifier().setSystem(CodingSystems.ZSR_OID).setValue(source.getSocialInsuranceNumber());
-		}
-
-		patient.setBirthDate(source.getBirthDate());
-		patient.addName().setFamily(source.getFamilyName()).addGiven(source.getGivenName());
-
-		// Add the Gender of the Patient this is converted from the SWING Coding
-		if (source.getGender() == 99) {
-			patient.setGender(AdministrativeGender.FEMALE);
-		} else if (source.getGender() == 100) {
-			patient.setGender(AdministrativeGender.MALE);
-		} else {
-			patient.setGender(AdministrativeGender.UNKNOWN);
-		}
-
-		final Address patientAddress = new Address().setCity(source.getCity())
-				.setPostalCode(Integer.toString(source.getPostalCode())).setCountry(source.getCountry())
-				.addLine(source.getRoad());
-		patient.addAddress(patientAddress);
-
+		// AHV-Nummer
+//		if (source.getSocialInsuranceNumber() != null) {
+//			patient.addIdentifier().setSystem(CodingSystems.ZSR_OID).setValue(source.getSocialInsuranceNumber());
+//		}
 		// Needs to be adapted in a further step
 		// It is now static to match the FHIR requirements
 		Telecom telecom = new Telecom();

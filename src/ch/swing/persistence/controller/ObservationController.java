@@ -53,6 +53,7 @@ public class ObservationController extends MasterDataController {
 				Date lastUpdate = rs.getDate("lastUpdate");
 				Date deletionDate = rs.getDate("deletionDate");
 				Date sendDate = rs.getDate("sendDate");
+				Long smisObservationId = rs.getLong("smisObservationId");
 
 				observation.setObservationId(observationId);
 				observation.setEffectiveDate(effectiveDate);
@@ -63,6 +64,7 @@ public class ObservationController extends MasterDataController {
 				observation.setLastUpdate(lastUpdate);
 				observation.setDeletionDate(deletionDate);
 				observation.setSendDate(sendDate);
+				observation.setSmisObservationId(smisObservationId);
 
 				observationList.add(observation);
 			}
@@ -81,8 +83,8 @@ public class ObservationController extends MasterDataController {
 		return null;
 
 	}
-	
-	public void updateSendDate(int patientId) {
+
+	public void updateSendDateObservation(int patientId) {
 		PreparedStatement pstmt = null;
 		try {
 			String update_record = "UPDATE dbo.Observation SET sendDate = ? WHERE idPatient = ?";
@@ -107,6 +109,82 @@ public class ObservationController extends MasterDataController {
 			}
 		}
 	}
-	
+
+	public void updateSendDateNursingReport(int patientId) {
+		PreparedStatement pstmt = null;
+		try {
+			String update_record = "UPDATE dbo.NursingReport SET sendDate = ? WHERE idPatient = ?";
+			pstmt = connection.prepareStatement(update_record);
+
+			java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
+			pstmt.setDate(1, sqlDate);
+			pstmt.setInt(2, patientId);
+
+			pstmt.executeUpdate();
+			logger.info("Patient with ID:" + patientId + " was succesfully updated (sendDate)");
+
+		} catch (SQLException err) {
+			logger.error(err.getStackTrace());
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException err) {
+					logger.error(err.getStackTrace());
+				}
+			}
+		}
+	}
+
+	public void updateSMISIDNursingReport(int patientId, long smisNursingReportId) {
+		PreparedStatement pstmt = null;
+		try {
+			String update_record = "UPDATE dbo.NursingReport SET smisObservationId = ? WHERE idPatient = ?";
+			pstmt = connection.prepareStatement(update_record);
+
+			pstmt.setLong(1, smisNursingReportId);
+			pstmt.setInt(2, patientId);
+
+			pstmt.executeUpdate();
+			logger.info("NursingReport: " + smisNursingReportId + " with PatientID:" + patientId
+					+ " was succesfully updated (smis ID)");
+
+		} catch (SQLException err) {
+			logger.error(err.getStackTrace());
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException err) {
+					logger.error(err.getStackTrace());
+				}
+			}
+		}
+	}
+
+	public void updateSMISIDObservation(int patientId, long smisObservationId) {
+		PreparedStatement pstmt = null;
+		try {
+			String update_record = "UPDATE dbo.Observation SET smisObservationId = ? WHERE idPatient = ?";
+			pstmt = connection.prepareStatement(update_record);
+
+			pstmt.setLong(1, smisObservationId);
+			pstmt.setInt(2, patientId);
+
+			pstmt.executeUpdate();
+			logger.info("Observation: " + smisObservationId + " with PatientID:" + patientId
+					+ " was succesfully updated (smis ID)");
+		} catch (SQLException err) {
+			logger.error(err.getStackTrace());
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException err) {
+					logger.error(err.getStackTrace());
+				}
+			}
+		}
+	}
 
 }
