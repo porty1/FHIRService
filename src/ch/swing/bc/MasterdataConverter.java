@@ -43,7 +43,6 @@ public class MasterdataConverter {
 		for (int i = 0; i < patientList.size(); i++) {
 			convertPatient(patientList.get(i));
 		}
-
 	}
 
 	public void convertPatient(ch.swing.persistence.model.Patient source) throws FHIRException, FHIRServiceException {
@@ -80,9 +79,9 @@ public class MasterdataConverter {
 					.setValue(Long.toString(source.getSmisPatientId()));
 		}
 		// AHV-Nummer
-//		if (source.getSocialInsuranceNumber() != null) {
-//			patient.addIdentifier().setSystem(CodingSystems.ZSR_OID).setValue(source.getSocialInsuranceNumber());
-//		}
+		if (source.getSocialInsuranceNumber() != null) {
+			patient.addIdentifier().setSystem(CodingSystems.ZSR_OID).setValue(source.getSocialInsuranceNumber());
+		}
 		// Needs to be adapted in a further step
 		// It is now static to match the FHIR requirements
 		Telecom telecom = new Telecom();
