@@ -54,6 +54,8 @@ public class NusingReportController extends MasterDataController {
 				Date lastUpdate = rs.getDate("lastUpdate");
 				Date deletionDate = rs.getDate("deletionDate");
 				Date sendDate = rs.getDate("sendDate");
+				int swingNursingReportId = rs.getInt("swingNursingReportId");
+				Long smisObservationId = rs.getLong("smisObservationId");
 
 				nursingReport.setNursingReportId(nursingReportId);
 				nursingReport.setNursingReportDate(nursingReportDate);
@@ -63,6 +65,8 @@ public class NusingReportController extends MasterDataController {
 				nursingReport.setLastUpdate(lastUpdate);
 				nursingReport.setDeletionDate(deletionDate);
 				nursingReport.setSendDate(sendDate);
+				nursingReport.setSwingNursingReportId(swingNursingReportId);
+				nursingReport.setSmisObservationId(smisObservationId);
 
 				nursingReportList.add(nursingReport);
 			}

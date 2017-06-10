@@ -18,6 +18,16 @@ public class NursingReport {
 	private Date lastUpdate;
 	private Date deletionDate;
 	private Date sendDate;
+	private int swingNursingReportId;
+	private Long smisObservationId;
+
+	public Long getSmisObservationId() {
+		return smisObservationId;
+	}
+
+	public void setSmisObservationId(Long smisObservationId) {
+		this.smisObservationId = smisObservationId;
+	}
 
 	public Date getSendDate() {
 		return sendDate;
@@ -81,5 +91,13 @@ public class NursingReport {
 
 	public void setDeletionDate(Date deletionDate) {
 		this.deletionDate = deletionDate;
+	}
+
+	public int getSwingNursingReportId() {
+		return swingNursingReportId;
+	}
+
+	public void setSwingNursingReportId(int swingNursingReportId) {
+		this.swingNursingReportId = swingNursingReportId;
 	}
 }

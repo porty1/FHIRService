@@ -47,7 +47,7 @@ public class ObservationConverter {
 				convertNursingReport(nursingReportList.get(i));
 			}
 		} else {
-			throw new FHIRServiceException("Database List empty!");
+			logger.info("Database List empty!");
 		}
 	}
 
@@ -60,7 +60,7 @@ public class ObservationConverter {
 				convertObservation(observationList.get(i));
 			}
 		} else {
-			throw new FHIRServiceException("Database List empty!");
+			logger.info("Database List empty!");
 		}
 	}
 
@@ -115,7 +115,7 @@ public class ObservationConverter {
 			observation.setValue(new StringType(source.getValue()));
 		}
 		observation.setEffective(new DateTimeType(source.getEffectiveDate()));
-		sendObservation(observation, source.getPatient().getPatientId());
+		sendObservation(observation, source.getPatient().getPatientId(), source.getSmisObservationId());
 	}
 
 	/**
@@ -125,6 +125,11 @@ public class ObservationConverter {
 	 */
 	public void convertNursingReport(ch.swing.persistence.model.NursingReport source) {
 		Observation nursingReport = new Observation();
+		if (source.getSwingNursingReportId() != 0) {
+			nursingReport.addIdentifier().setSystem(CodingSystems.SYSTEM_PATIENT_EXTERNAL_ID)
+					.setValue(Integer.toString(source.getSwingNursingReportId()));
+		}
+
 		nursingReport.setStatus(ObservationStatus.FINAL);
 		nursingReport.setSubject(new Reference("Patient/" + Long.toString(source.getPatient().getSmisPatientId())));
 		final Coding code = nursingReport.getCode().addCoding();
@@ -133,13 +138,13 @@ public class ObservationConverter {
 				.setDisplay("Pflegebericht");
 		nursingReport.setValue(new StringType(source.getValue()));
 		nursingReport.setEffective(new DateTimeType(source.getNursingReportDate()));
-		sendObservation(nursingReport, source.getPatient().getPatientId());
+		sendObservation(nursingReport, source.getPatient().getPatientId(), source.getSmisObservationId());
 	}
 
 	/**
 	 * Sends the observation via FHIR to the SMIS Service
 	 */
-	public void sendObservation(Observation observation, int patientId) {
+	public void sendObservation(Observation observation, int patientId, Long smisObservationId) {
 		// Creating the FHIR DSTU3 Context
 		FhirContext ctx = FhirContext.forDstu3();
 
@@ -157,13 +162,20 @@ public class ObservationConverter {
 		String smisID = outcome.getId().getIdPart();
 		logger.info("Observation ID: " + smisID);
 
+		if (smisObservationId == 0) {
+
+		}
 		// Observation beinhaltet Vitaldaten
 		if (observation.getCode().getCoding().get(0).getCode().equals("vital-signs")) {
 			ObservationController.getInstance().updateSendDateObservation(patientId);
-			ObservationController.getInstance().updateIdentifier(Long.parseLong(smisID), patientId);
+			if (smisObservationId == 0) {
+				ObservationController.getInstance().updateSMISIDObservation(patientId, Long.parseLong(smisID));
+			}
 			// Observation beinhaltet Pflegeberichte
 		} else {
-			ObservationController.getInstance().updateSMISIDNursingReport(patientId, Long.parseLong(smisID));
+			if (smisObservationId == 0) {
+				ObservationController.getInstance().updateSMISIDNursingReport(patientId, Long.parseLong(smisID));
+			}
 			ObservationController.getInstance().updateSendDateNursingReport(patientId);
 		}
 	}

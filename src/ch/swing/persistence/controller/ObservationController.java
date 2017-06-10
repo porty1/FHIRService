@@ -147,7 +147,7 @@ public class ObservationController extends MasterDataController {
 
 			pstmt.executeUpdate();
 			logger.info("NursingReport: " + smisNursingReportId + " with PatientID:" + patientId
-					+ " was succesfully updated (smis ID)");
+					+ " was succesfully updated (smisObservationId)");
 
 		} catch (SQLException err) {
 			logger.error(err.getStackTrace());
@@ -173,7 +173,7 @@ public class ObservationController extends MasterDataController {
 
 			pstmt.executeUpdate();
 			logger.info("Observation: " + smisObservationId + " with PatientID:" + patientId
-					+ " was succesfully updated (smis ID)");
+					+ " was succesfully updated (smisObservationId)");
 		} catch (SQLException err) {
 			logger.error(err.getStackTrace());
 		} finally {

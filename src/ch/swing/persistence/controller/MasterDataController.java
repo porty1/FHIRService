@@ -84,7 +84,6 @@ public class MasterDataController {
 				patient.setTitle(title);
 				patient.setGivenName(givenName);
 				patient.setFamilyName(familyName);
-				// patient.setTelecom(getTelecom(idTelecom));
 				patient.setGender(gender);
 				patient.setBirthDate(birthDate);
 				patient.setDeceasedDate(deceasedDate);
@@ -101,19 +100,7 @@ public class MasterDataController {
 				patient.setTelecom(telecom);
 				patient.setSocialInsuranceNumber(socialInsuranceNumber);
 
-				logger.info("Patient wird ausgelesen");
-				logger.info(patient.getBirthDate());
-				logger.info(patient.getCity());
-				logger.info(patient.getCountry());
-				logger.info(patient.getFamilyName());
-				logger.info(patient.getGender());
-				logger.info(patient.getGivenName());
-				logger.info(patient.getPatientId());
-				logger.info(patient.getPostalCode());
 				logger.info(patient.getSmisPatientId());
-				logger.info(patient.getSocialInsuranceNumber());
-				logger.info(patient.getTelecom());
-				
 				patientList.add(patient);
 			}
 			return patientList;
@@ -176,7 +163,6 @@ public class MasterDataController {
 				patient.setTitle(title);
 				patient.setGivenName(givenName);
 				patient.setFamilyName(familyName);
-				// patient.setTelecom(getTelecom(idTelecom));
 				patient.setTelecom(telecom);
 				patient.setGender(gender);
 				patient.setBirthDate(birthDate);
@@ -193,6 +179,8 @@ public class MasterDataController {
 				patient.setDeletionDate(deletionDate);
 				patient.setSocialInsuranceNumber(socialInsuranceNumber);
 
+				logger.info(patient.getSmisPatientId());
+				
 				return patient;
 			}
 		} catch (SQLException err) {

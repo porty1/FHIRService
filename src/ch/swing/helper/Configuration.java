@@ -26,7 +26,7 @@ public class Configuration {
 	// URL for the Medication
 	public static final String MEDICATIONURL = "https://smis-test.arpage.ch:443/smis2-core/orgs/";
 	// Username to view the Medication (Administrator)
-	public static final String MEDICATIONUSERNAME = "2064905424321";
+	public static final String MEDICATIONUSERNAME = "2064905472674";
 	// Password to view the Medication
 	public static final String MEDICATIONPASSWORD = "Test1234.";
 	// Organisation ID in the SMIS System
@@ -37,7 +37,7 @@ public class Configuration {
 	// FHIR Server URL from the SMIS System
 	public static final String FHIRSERVERURL = "https://smis-test.arpage.ch/smis2-importer/fhir";
 	// Username for the FHIR Server
-	public static final String FHIRUSERNAME = "2064905424321";
+	public static final String FHIRUSERNAME = "2064905472674";
 	// Password for the FHIR Server
 	public static final String FHIRPASSWORD = "Test1234.";
 

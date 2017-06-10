@@ -32,7 +32,7 @@ public class MedicationConverter {
 	 * Retrieve all the Patients from the Database from which we need to get the
 	 * medication from the SMIS System
 	 */
-	public void startMedicationConvertion() {
+	public void startMedicationConverter() {
 		List<Patient> patientList = MasterDataController.getInstance().getIDPatients();
 
 		for (int i = 0; i < patientList.size(); i++) {

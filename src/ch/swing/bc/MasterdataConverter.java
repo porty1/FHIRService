@@ -93,10 +93,10 @@ public class MasterdataConverter {
 		if (source.getTelecom() != null) {
 			patient.setTelecom(ConverterUtils.convertTelecom(Arrays.asList(telecom)));
 		}
-		sendPatient(patient, source.getPatientId());
+		sendPatient(patient, source.getPatientId(), source.getSmisPatientId());
 	}
 
-	public void sendPatient(Patient patient, int patientId) {
+	public void sendPatient(Patient patient, int patientId, Long smisPatientId) {
 		// Creating the FHIR DSTU3 Context
 		FhirContext ctx = FhirContext.forDstu3();
 
@@ -112,8 +112,12 @@ public class MasterdataConverter {
 		final MethodOutcome outcome;
 		outcome = client.create().resource(patient).execute();
 		logger.info("SMIS ID: " + outcome.getId().getIdPart());
+
 		// Update the SMIS ID in the Database for further changes
-		MasterDataController.getInstance().updateIdentifier(Long.parseLong(outcome.getId().getIdPart()), patientId);
+		// The ID must not change!
+		if (smisPatientId == 0) {
+			MasterDataController.getInstance().updateIdentifier(Long.parseLong(outcome.getId().getIdPart()), patientId);
+		}
 		// Update the creation Date in the Database because of the Trigger
 		MasterDataController.getInstance().updateCreationDate(patientId);
 	}
