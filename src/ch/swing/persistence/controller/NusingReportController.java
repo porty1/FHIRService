@@ -29,7 +29,7 @@ public class NusingReportController extends MasterDataController {
 		try {
 			connection = dc.getConnection();
 		} catch (SQLException e) {
-			System.err.println("There was an error getting the connection: " + e.getMessage());
+			logger.error("There was an error getting the connection: " + e.getMessage());
 		}
 	}
 
@@ -72,13 +72,13 @@ public class NusingReportController extends MasterDataController {
 			}
 			return nursingReportList;
 		} catch (SQLException err) {
-			System.out.println(err.getMessage());
+			logger.error(err.getMessage());
 		} finally {
 			if (stmt != null) {
 				try {
 					stmt.close();
 				} catch (SQLException err) {
-					System.out.println(err.getMessage());
+					logger.error(err.getMessage());
 				}
 			}
 		}
@@ -101,7 +101,7 @@ public class NusingReportController extends MasterDataController {
 			pstmt.setInt(2, patientId);
 
 			pstmt.executeUpdate();
-			logger.info("Patient with ID:" + patientId + " was succesfully updated (sendDate)");
+			logger.info("NursingReport - Patient with ID:" + patientId + " was succesfully updated - new sendDate)");
 
 		} catch (SQLException err) {
 			logger.error(err.getStackTrace());

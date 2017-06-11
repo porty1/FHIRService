@@ -26,7 +26,7 @@ public class MedicationController {
 		try {
 			connection = dc.getConnection();
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			logger.error(e.getMessage());
 		}
 	}
 
@@ -53,13 +53,13 @@ public class MedicationController {
 			pstmt.executeUpdate();
 
 		} catch (SQLException err) {
-			logger.error(err.getStackTrace());
+			logger.error(err.getMessage());
 		} finally {
 			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException err) {
-					logger.error(err.getStackTrace());
+					logger.error(err.getMessage());
 				}
 			}
 		}
@@ -76,17 +76,16 @@ public class MedicationController {
 				return medication;
 			}
 		} catch (SQLException err) {
-			logger.error(err.getStackTrace() + err.getMessage());
+			logger.error(err.getMessage());
 		} finally {
 			if (stmt != null) {
 				try {
 					stmt.close();
 				} catch (SQLException err) {
-					logger.error(err.getStackTrace());
+					logger.error(err.getMessage());
 				}
 			}
 		}
 		return null;
-
 	}
 }

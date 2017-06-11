@@ -29,7 +29,7 @@ public class ObservationController extends MasterDataController {
 		try {
 			connection = dc.getConnection();
 		} catch (SQLException e) {
-			System.err.println("There was an error getting the connection: " + e.getMessage());
+			logger.error(e.getMessage());
 		}
 
 	}
@@ -69,14 +69,14 @@ public class ObservationController extends MasterDataController {
 				observationList.add(observation);
 			}
 			return observationList;
-		} catch (SQLException err) {
-			System.out.println(err.getMessage());
+		} catch (SQLException e) {
+			logger.error(e.getMessage());
 		} finally {
 			if (stmt != null) {
 				try {
 					stmt.close();
-				} catch (SQLException err) {
-					System.out.println(err.getMessage());
+				} catch (SQLException e) {
+					logger.error(e.getMessage());
 				}
 			}
 		}
@@ -95,16 +95,16 @@ public class ObservationController extends MasterDataController {
 			pstmt.setInt(2, patientId);
 
 			pstmt.executeUpdate();
-			logger.info("Patient with ID:" + patientId + " was succesfully updated (sendDate)");
+			logger.info("Observation - Patient with ID:" + patientId + " was succesfully updated new sendDate");
 
 		} catch (SQLException err) {
-			logger.error(err.getStackTrace());
+			logger.error(err.getMessage());
 		} finally {
 			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException err) {
-					logger.error(err.getStackTrace());
+					logger.error(err.getMessage());
 				}
 			}
 		}
@@ -121,16 +121,16 @@ public class ObservationController extends MasterDataController {
 			pstmt.setInt(2, patientId);
 
 			pstmt.executeUpdate();
-			logger.info("Patient with ID:" + patientId + " was succesfully updated (sendDate)");
+			logger.info("Observation: Patient with ID:" + patientId + " was succesfully updated new sendDate");
 
 		} catch (SQLException err) {
-			logger.error(err.getStackTrace());
+			logger.error(err.getMessage());
 		} finally {
 			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException err) {
-					logger.error(err.getStackTrace());
+					logger.error(err.getMessage());
 				}
 			}
 		}
@@ -147,16 +147,16 @@ public class ObservationController extends MasterDataController {
 
 			pstmt.executeUpdate();
 			logger.info("NursingReport: " + smisNursingReportId + " with PatientID:" + patientId
-					+ " was succesfully updated (smisObservationId)");
+					+ " was succesfully updated new smisObservationId");
 
 		} catch (SQLException err) {
-			logger.error(err.getStackTrace());
+			logger.error(err.getMessage());
 		} finally {
 			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException err) {
-					logger.error(err.getStackTrace());
+					logger.error(err.getMessage());
 				}
 			}
 		}
@@ -175,16 +175,15 @@ public class ObservationController extends MasterDataController {
 			logger.info("Observation: " + smisObservationId + " with PatientID:" + patientId
 					+ " was succesfully updated (smisObservationId)");
 		} catch (SQLException err) {
-			logger.error(err.getStackTrace());
+			logger.error(err.getMessage());
 		} finally {
 			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException err) {
-					logger.error(err.getStackTrace());
+					logger.error(err.getMessage());
 				}
 			}
 		}
 	}
-
 }

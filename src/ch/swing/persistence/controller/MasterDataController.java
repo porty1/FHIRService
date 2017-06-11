@@ -35,7 +35,7 @@ public class MasterDataController {
 		try {
 			connection = dc.getConnection();
 		} catch (SQLException e) {
-			System.err.println("There was an error getting the connection: " + e.getMessage());
+			logger.error("There was an error getting the connection: " + e.getMessage());
 		}
 
 	}
@@ -100,7 +100,6 @@ public class MasterDataController {
 				patient.setTelecom(telecom);
 				patient.setSocialInsuranceNumber(socialInsuranceNumber);
 
-				logger.info(patient.getSmisPatientId());
 				patientList.add(patient);
 			}
 			return patientList;
@@ -124,10 +123,8 @@ public class MasterDataController {
 		Statement stmt = null;
 		String query = "select * from Patient where patientId=" + idPatient;
 		try {
-
 			stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
-			logger.debug(rs.toString());
 			while (rs.next()) {
 				Patient patient = new Patient();
 				int patientId = rs.getInt("patientId");
@@ -179,8 +176,6 @@ public class MasterDataController {
 				patient.setDeletionDate(deletionDate);
 				patient.setSocialInsuranceNumber(socialInsuranceNumber);
 
-				logger.info(patient.getSmisPatientId());
-				
 				return patient;
 			}
 		} catch (SQLException err) {
@@ -411,7 +406,7 @@ public class MasterDataController {
 			pstmt.setLong(1, SMISID);
 			pstmt.setInt(2, patientId);
 			pstmt.executeUpdate();
-			logger.info("Patient with ID:" + patientId + " was succesfully updated (SMIS ID)");
+			logger.info("Patient with ID:" + patientId + " was succesfully updated - new SMIS ID " + SMISID);
 
 		} catch (SQLException err) {
 			logger.error(err.getStackTrace());
@@ -420,7 +415,7 @@ public class MasterDataController {
 				try {
 					pstmt.close();
 				} catch (SQLException err) {
-					logger.error(err.getStackTrace());
+					logger.error(err.getMessage());
 				}
 			}
 		}
@@ -442,16 +437,16 @@ public class MasterDataController {
 			pstmt.setInt(2, patientId);
 
 			pstmt.executeUpdate();
-			logger.info("Patient with ID:" + patientId + " was succesfully updated (creationDate)");
+			logger.info("Patient with ID:" + patientId + " was succesfully updated - new creationDate");
 
 		} catch (SQLException err) {
-			logger.error(err.getStackTrace());
+			logger.error(err.getMessage());
 		} finally {
 			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (SQLException err) {
-					logger.error(err.getStackTrace());
+					logger.error(err.getMessage());
 				}
 			}
 		}
