@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -43,12 +44,12 @@ public class MasterDataController {
 	public List<Patient> getMasterDataChanges() {
 
 		List<Patient> patientList = new ArrayList<Patient>();
-
 		Statement stmt = null;
-		String query = "select * from dbo.Patient WHERE creationDate IS NULL";
+		String query = "select * from dbo.Patient WHERE sendDate IS NULL OR lastUpdate >= sendDate";
 		try {
 			stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
+
 			while (rs.next()) {
 				Patient patient = new Patient();
 				int patientId = rs.getInt("patientId");
@@ -105,13 +106,13 @@ public class MasterDataController {
 			return patientList;
 
 		} catch (SQLException err) {
-			System.out.println(err.getMessage());
+			logger.error(err.getMessage());
 		} finally {
 			if (stmt != null) {
 				try {
 					stmt.close();
 				} catch (SQLException err) {
-					System.out.println(err.getMessage());
+					logger.error(err.getMessage());
 				}
 			}
 		}
@@ -179,13 +180,13 @@ public class MasterDataController {
 				return patient;
 			}
 		} catch (SQLException err) {
-			System.out.println(err.getMessage());
+			logger.error(err.getMessage());
 		} finally {
 			if (stmt != null) {
 				try {
 					stmt.close();
 				} catch (SQLException err) {
-					System.out.println(err.getMessage());
+					logger.error(err.getMessage());
 				}
 			}
 		}
@@ -227,13 +228,13 @@ public class MasterDataController {
 				return insuranceCard;
 			}
 		} catch (SQLException err) {
-			System.out.println(err.getMessage());
+			logger.error(err.getMessage());
 		} finally {
 			if (stmt != null) {
 				try {
 					stmt.close();
 				} catch (SQLException err) {
-					System.out.println(err.getMessage());
+					logger.error(err.getMessage());
 				}
 			}
 		}
@@ -274,13 +275,13 @@ public class MasterDataController {
 				return telecom;
 			}
 		} catch (SQLException err) {
-			System.out.println(err.getMessage());
+			logger.error(err.getMessage());
 		} finally {
 			if (stmt != null) {
 				try {
 					stmt.close();
 				} catch (SQLException err) {
-					System.out.println(err.getMessage());
+					logger.error(err.getMessage());
 				}
 			}
 		}
@@ -335,13 +336,13 @@ public class MasterDataController {
 				return contact;
 			}
 		} catch (SQLException err) {
-			System.out.println(err.getMessage());
+			logger.error(err.getMessage());
 		} finally {
 			if (stmt != null) {
 				try {
 					stmt.close();
 				} catch (SQLException err) {
-					System.out.println(err.getMessage());
+					logger.error(err.getMessage());
 				}
 			}
 		}
@@ -426,18 +427,20 @@ public class MasterDataController {
 	 * 
 	 * @param patientId
 	 */
-	public void updateCreationDate(int patientId) {
+	public void updateSendDate(int patientId) {
 		PreparedStatement pstmt = null;
 		try {
-			String update_record = "UPDATE dbo.Patient SET creationDate = ? WHERE patientId = ?";
+			String update_record = "UPDATE dbo.Patient SET sendDate = ? WHERE patientId = ?";
 			pstmt = connection.prepareStatement(update_record);
+			Calendar calendar = Calendar.getInstance();
+			java.util.Date now = calendar.getTime();
+			java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(now.getTime());
 
-			java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
-			pstmt.setDate(1, sqlDate);
+			pstmt.setTimestamp(1, currentTimestamp);
 			pstmt.setInt(2, patientId);
 
 			pstmt.executeUpdate();
-			logger.info("Patient with ID:" + patientId + " was succesfully updated - new creationDate");
+			logger.info("Patient with ID:" + patientId + " was succesfully updated - new sendDate");
 
 		} catch (SQLException err) {
 			logger.error(err.getMessage());

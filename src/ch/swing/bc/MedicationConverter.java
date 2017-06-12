@@ -2,13 +2,13 @@ package ch.swing.bc;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Base64;
 import java.util.List;
 
 import org.apache.catalina.tribes.util.Arrays;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.log4j.Logger;
 
 import ch.swing.helper.Configuration;
@@ -41,8 +41,8 @@ public class MedicationConverter {
 	}
 
 	private String getBasicAuthenticationEncoding() {
-		String userPassword = Configuration.MEDICATIONUSERNAME + ":" + Configuration.MEDICATIONPASSWORD;
-		return new String(Base64.encodeBase64(userPassword.getBytes()));
+		String authStr = Configuration.MEDICATIONUSERNAME + ":" + Configuration.MEDICATIONPASSWORD;
+		return Base64.getEncoder().encodeToString(authStr.getBytes());
 	}
 
 	/**
@@ -53,21 +53,27 @@ public class MedicationConverter {
 	 * @param patientId
 	 */
 	public void getPDFFromURL(Long SMISPatientId, int patientId) {
-		// https://smis-test.arpage.ch:443/smis2-core/orgs/{orgId}/patients/{patientId}/mediPlan?dateFrom=yyyymmdd&dateTo=yyyydd
-
 		final String urlSMISString = Configuration.MEDICATIONURL + Configuration.MEDICATIONORGID + "/patients/"
 				+ SMISPatientId + "/mediPlan?dateFrom=" + Configuration.MEDICATIONDATEFROM + "&dateTo="
 				+ Configuration.MEDICATIONDATETO;
 		try {
-			HttpGet getRequest = new HttpGet(urlSMISString);
-			getRequest.addHeader("Authorization", "Basic " + getBasicAuthenticationEncoding());
 			URL url = new URL(urlSMISString);
-			InputStream in = url.openStream();
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("GET");
+			connection.setRequestProperty("Authorization", "Basic " + getBasicAuthenticationEncoding());
+			connection.setRequestProperty("Accept", "application/pdf; charset=UTF-8");
+			connection.connect();
+			final int code = connection.getResponseCode();
+			if (code < 200 || code >= 300) {
+				logger.info("smisid: " + String.valueOf(SMISPatientId) + ", response code: " + String.valueOf(code));
+				throw new IOException(String.valueOf(code));
+			}
+			InputStream in = connection.getInputStream();
 			byte[] medicationFile = IOUtils.toByteArray(in);
 			byte[] dbMedication = MedicationController.getInstance().getMedication(patientId);
-
-			if (Arrays.equals(medicationFile, dbMedication)) {
-				logger.info("The Medication is up to date!");
+			
+			if (medicationFile.length == dbMedication.length) {
+				logger.info("The Medication from Patient: "+patientId +" is up to date!");
 			} else {
 				MedicationController.getInstance().saveMedication(medicationFile, patientId);
 			}

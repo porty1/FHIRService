@@ -59,7 +59,6 @@ public class DB_MetaData {
 		ResultSet rs = null;
 		for (String actualTable : tables) {
 			rs = metadata.getColumns(null, null, actualTable, null);
-			System.out.println(actualTable.toUpperCase());
 			while (rs.next()) {
 				logger.info(rs.getString("COLUMN_NAME") + " " + rs.getString("TYPE_NAME") + " "
 						+ rs.getString("COLUMN_SIZE"));

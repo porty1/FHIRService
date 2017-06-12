@@ -40,7 +40,7 @@ public class MedicationController {
 
 		PreparedStatement pstmt = null;
 		try {
-			String INSERT_RECORD = "insert into medication(idPatient, medication, creationDate) values(?, ?, ?)";
+			String INSERT_RECORD = "insert into dbo.medication(idPatient, medication, creationDate) values(?, ?, ?)";
 			pstmt = connection.prepareStatement(INSERT_RECORD);
 			// Insert the Patient ID
 			pstmt.setInt(1, idPatient);
@@ -51,6 +51,7 @@ public class MedicationController {
 			pstmt.setDate(3, sqlDate);
 			// Execute the changes
 			pstmt.executeUpdate();
+			logger.info("Medication from Patient: " + idPatient + " updated");
 
 		} catch (SQLException err) {
 			logger.error(err.getMessage());
@@ -87,5 +88,35 @@ public class MedicationController {
 			}
 		}
 		return null;
+	}
+	
+	public void deleteMedication(byte[] medicationFile, int idPatient) {
+
+		PreparedStatement pstmt = null;
+		try {
+			String INSERT_RECORD = "delete frob dbo.medication(idPatient, medication, creationDate) values(?, ?, ?)";
+			pstmt = connection.prepareStatement(INSERT_RECORD);
+			// Insert the Patient ID
+			pstmt.setInt(1, idPatient);
+			// Insert the medication PDF File
+			pstmt.setBytes(2, medicationFile);
+			// Insert the current Date as creationDate
+			java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
+			pstmt.setDate(3, sqlDate);
+			// Execute the changes
+			pstmt.executeUpdate();
+			logger.info("Medication from Patient: " + idPatient + " updated");
+
+		} catch (SQLException err) {
+			logger.error(err.getMessage());
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException err) {
+					logger.error(err.getMessage());
+				}
+			}
+		}
 	}
 }

@@ -71,7 +71,8 @@ public class MasterdataConverter {
 				patient.setGender(AdministrativeGender.UNKNOWN);
 			}
 		} else {
-			throw new FHIRServiceException("Required field missing");
+			logger.error("Required Field missing!");
+			throw new FHIRServiceException("Required field missing!");
 		}
 		// SMIS ID
 		if (source.getSmisPatientId() != 0) {
@@ -82,6 +83,7 @@ public class MasterdataConverter {
 		if (source.getSocialInsuranceNumber() != null) {
 			patient.addIdentifier().setSystem(CodingSystems.ZSR_OID).setValue(source.getSocialInsuranceNumber());
 		}
+		
 		// Needs to be adapted in a further step
 		// It is now static to match the FHIR requirements
 		Telecom telecom = new Telecom();
@@ -118,8 +120,8 @@ public class MasterdataConverter {
 		if (smisPatientId == 0) {
 			MasterDataController.getInstance().updateIdentifier(Long.parseLong(outcome.getId().getIdPart()), patientId);
 		}
-		// Update the creation Date in the Database because of the Trigger
-		MasterDataController.getInstance().updateCreationDate(patientId);
+		// Update the send Date in the Database because of the Trigger
+		MasterDataController.getInstance().updateSendDate(patientId);
 	}
 
 	public List<ch.swing.persistence.model.Patient> getPatientList() throws FHIRServiceException {
