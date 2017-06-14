@@ -10,8 +10,22 @@ import org.hl7.fhir.exceptions.FHIRException;
 
 import ch.swing.persistence.model.Telecom;
 
+/**
+ * Hilfsklasse für die Konvertierung
+ * 
+ * @author Yannis Portmann
+ *
+ */
 public final class ConverterUtils {
 
+	/**
+	 * Konvertiert ein Telecom Objekt in eine ContactPoint Objekt, welches für
+	 * die FHIR Ressource verwendet wird
+	 * 
+	 * @param communications
+	 * @return
+	 * @throws FHIRException
+	 */
 	public static List<ContactPoint> convertTelecom(final List<Telecom> communications) throws FHIRException {
 		if (communications == null) {
 			return null;

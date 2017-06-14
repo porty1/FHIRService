@@ -1,5 +1,11 @@
 package ch.swing.helper;
 
+/**
+ * Exception um diverse Fehlermeldungen abzufangen
+ * 
+ * @author Yannis Portmann
+ *
+ */
 public class FHIRServiceException extends Exception {
 
 	private static final long serialVersionUID = -8810189971297913263L;

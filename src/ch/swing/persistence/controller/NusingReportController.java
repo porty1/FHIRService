@@ -11,6 +11,12 @@ import java.util.List;
 
 import ch.swing.persistence.model.NursingReport;
 
+/**
+ * Controller Klasse für die Interaktion mit der Datenbank
+ * 
+ * @author Yannis Portmann
+ *
+ */
 public class NusingReportController extends MasterDataController {
 
 	private static NusingReportController nc = null;
@@ -34,6 +40,7 @@ public class NusingReportController extends MasterDataController {
 	}
 
 	/**
+	 * Holt alle neu erstellten Pflegeberichtseinträge aus der Datenbank
 	 * 
 	 * @return
 	 */
@@ -87,6 +94,7 @@ public class NusingReportController extends MasterDataController {
 	}
 
 	/**
+	 * Fügt ein neues sendDatum zu einem Pflegeberichtseintrag hinzu
 	 * 
 	 * @param patientId
 	 */

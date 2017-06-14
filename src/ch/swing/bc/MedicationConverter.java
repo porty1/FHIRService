@@ -7,7 +7,6 @@ import java.net.URL;
 import java.util.Base64;
 import java.util.List;
 
-import org.apache.catalina.tribes.util.Arrays;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
@@ -16,6 +15,13 @@ import ch.swing.persistence.controller.MasterDataController;
 import ch.swing.persistence.controller.MedicationController;
 import ch.swing.persistence.model.Patient;
 
+/**
+ * Diese Klasse ruft das PDF von der gewünschten SMIS URL ab und speichert es in
+ * die Datenbank
+ * 
+ * @author Yannis Portmann / Shpend Vladi
+ *
+ */
 public class MedicationConverter {
 	final static Logger logger = Logger.getLogger(MedicationConverter.class);
 	private static MedicationConverter mc = null;
@@ -29,8 +35,8 @@ public class MedicationConverter {
 	}
 
 	/**
-	 * Retrieve all the Patients from the Database from which we need to get the
-	 * medication from the SMIS System
+	 * Startpunkt für den Scheduler, holt alle Patienten aus der Datenbank
+	 * 
 	 */
 	public void startMedicationConverter() {
 		List<Patient> patientList = MasterDataController.getInstance().getIDPatients();
@@ -40,13 +46,19 @@ public class MedicationConverter {
 		}
 	}
 
+	/**
+	 * Hilfsmethode für das Login auf dem SMIS Server
+	 * 
+	 * @return
+	 */
 	private String getBasicAuthenticationEncoding() {
 		String authStr = Configuration.MEDICATIONUSERNAME + ":" + Configuration.MEDICATIONPASSWORD;
 		return Base64.getEncoder().encodeToString(authStr.getBytes());
 	}
 
 	/**
-	 * Retrieve all the PDF's from the SMIS System
+	 * Ruft die aktuelle Medikation, welche vom SMIS Server bereitgestellt wird
+	 * ab und speichert diese in der Datenbank ab
 	 * 
 	 * @param orgId
 	 * @param SMISPatientId
@@ -63,6 +75,7 @@ public class MedicationConverter {
 			connection.setRequestProperty("Authorization", "Basic " + getBasicAuthenticationEncoding());
 			connection.setRequestProperty("Accept", "application/pdf; charset=UTF-8");
 			connection.connect();
+			// Entsprechende Codes vom Server müssen behandelt werden!
 			final int code = connection.getResponseCode();
 			if (code < 200 || code >= 300) {
 				logger.info("smisid: " + String.valueOf(SMISPatientId) + ", response code: " + String.valueOf(code));
@@ -70,12 +83,17 @@ public class MedicationConverter {
 			}
 			InputStream in = connection.getInputStream();
 			byte[] medicationFile = IOUtils.toByteArray(in);
-			byte[] dbMedication = MedicationController.getInstance().getMedication(patientId);
-			
-			if (medicationFile.length == dbMedication.length) {
-				logger.info("The Medication from Patient: "+patientId +" is up to date!");
-			} else {
+			List<byte[]> medList = MedicationController.getInstance().getMedication(patientId);
+
+			if (medList.isEmpty()) {
 				MedicationController.getInstance().saveMedication(medicationFile, patientId);
+			} else {
+				int index = medList.size() - 1;
+				if (index >= 0 && (medList.get(index).length == medicationFile.length)) {
+					logger.info("The Medication from Patient: " + patientId + " is up to date!");
+				} else {
+					MedicationController.getInstance().saveMedication(medicationFile, patientId);
+				}
 			}
 			in.close();
 		} catch (IOException e) {

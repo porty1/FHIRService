@@ -11,6 +11,8 @@ import ch.swing.helper.Configuration;
 import ch.swing.helper.FHIRServiceException;
 
 /**
+ * Dies ist der Scheduler, welcher gestartet wird, damit der Prozess alle X
+ * Minuten durchläuft Die Konfiguration erfolgt über das Configuration file
  * 
  * @author Yannis Portmann
  *
@@ -19,10 +21,9 @@ public final class FHIRServiceScheduler {
 	final static Logger logger = Logger.getLogger(FHIRServiceScheduler.class);
 
 	public static void main(String[] args) throws FHIRException, FHIRServiceException {
-		//MedicationConverter.getInstance().startMedicationConverter();
-		MasterdataConverter.getInstance().startMasterdataConverter();
-		//ObservationConverter.getInstance().startNursingReportConverter();
-		
+		MedicationConverter.getInstance().startMedicationConverter();
+		// MasterdataConverter.getInstance().startMasterdataConverter();
+		// ObservationConverter.getInstance().startNursingReportConverter();
 
 		// Runnable runnableMasterData = new Runnable() {
 		// @Override

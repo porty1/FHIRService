@@ -22,13 +22,14 @@ import ch.swing.persistence.controller.NusingReportController;
 import ch.swing.persistence.controller.ObservationController;
 
 /**
+ * Converter Klasse um alle Vitaldaten und Pflegeberichtseinträge in eine FHIR
+ * Ressource umzuwandeln
  * 
- * @author Yannis Portmann
+ * @author Yannis Portmann / Shpend Vladi
  *
  */
 public class ObservationConverter {
 	final static Logger logger = Logger.getLogger(ObservationConverter.class);
-
 	private static ObservationConverter mc = null;
 
 	public static ObservationConverter getInstance() {
@@ -38,6 +39,13 @@ public class ObservationConverter {
 		return mc;
 	}
 
+	/**
+	 * Startpunkt für den Scheduler, welcher alle Pflegeberichtseinträge aus der
+	 * Datenbank abruft und die Konvertierung startet
+	 * 
+	 * @throws FHIRServiceException
+	 * @throws FHIRException
+	 */
 	public void startNursingReportConverter() throws FHIRServiceException, FHIRException {
 		List<ch.swing.persistence.model.NursingReport> nursingReportList = NusingReportController.getInstance()
 				.getNursingReportChanges();
@@ -51,6 +59,13 @@ public class ObservationConverter {
 		}
 	}
 
+	/**
+	 * Startpunkt für den Scheduler, welcher alle Vitaldaten aus der Datenbank
+	 * abruft und die Konvertierung startet
+	 * 
+	 * @throws FHIRServiceException
+	 * @throws FHIRException
+	 */
 	public void startObservationConverter() throws FHIRServiceException, FHIRException {
 		List<ch.swing.persistence.model.Observation> observationList = ObservationController.getInstance()
 				.getObservationChanges();
@@ -65,7 +80,7 @@ public class ObservationConverter {
 	}
 
 	/**
-	 * Converts the vital data to a FHIR observation object
+	 * Konvertiert alle Vitaldaten in eine FHIR Ressource
 	 */
 	public void convertObservation(ch.swing.persistence.model.Observation source) {
 		Observation observation = new Observation();
@@ -81,36 +96,34 @@ public class ObservationConverter {
 				.setDisplay("Vital-Signs");
 		// Blutdruck
 		if (source.getCode().equals("85354-9")) {
-
 			String[] parts = source.getValue().split("#");
 			String systol = parts[0];
 			String diastol = parts[1];
-
 			String temp = "Blutdruck systolisch: " + systol + "mmHg" + "\n Blutdruck diastolisch: " + diastol + "mmHg";
 			observation.setValue(new StringType(temp));
 			// Puls
 		} else if (source.getCode().equals("8867-4")) {
 			String puls = "Puls: ";
-			observation.setValue(new StringType(puls + source.getValue()));
+			observation.setValue(new StringType(puls + source.getValue() + "S/min"));
 			// Temperatur
 		} else if (source.getCode().equals("8310-5")) {
 			String temp = "Temperatur: ";
-			observation.setValue(new StringType(temp + source.getValue() + "Celsius"));
+			observation.setValue(new StringType(temp + source.getValue() + "°C"));
 			// Gewicht
 		} else if (source.getCode().equals("29463-7")) {
 			String gw = "Gewicht: ";
-			observation.setValue(new StringType(gw + source.getValue()));
+			observation.setValue(new StringType(gw + source.getValue() + "kg"));
 			// Blutzucker
 		} else if (source.getCode().equals("15074-8")) {
 			String bz = "Blutzucker: ";
-			observation.setValue(new StringType(bz + source.getValue()));
+			observation.setValue(new StringType(bz + source.getValue() + "mmol/l"));
 			// Atmung
 		} else if (source.getCode().equals("9279-1")) {
 			String atmg = "Atmung: ";
-			observation.setValue(new StringType(atmg + source.getValue()));
+			observation.setValue(new StringType(atmg + source.getValue() + "AZ/min"));
 		} else if (source.getCode().equals("8302-2")) {
 			String gr = "Grösse: ";
-			observation.setValue(new StringType(gr + source.getValue()));
+			observation.setValue(new StringType(gr + source.getValue() + "cm"));
 		} else {
 			observation.setValue(new StringType(source.getValue()));
 		}
@@ -119,7 +132,7 @@ public class ObservationConverter {
 	}
 
 	/**
-	 * Converts the nursing report to a FHIR observation object
+	 * Konvertiert die Pflegeberichtseinträge in eine FHIR Ressource
 	 * 
 	 * @param source
 	 */
@@ -142,7 +155,7 @@ public class ObservationConverter {
 	}
 
 	/**
-	 * Sends the observation via FHIR to the SMIS Service
+	 * Sendet die Observation Ressource an den FHIR Service
 	 */
 	public void sendObservation(Observation observation, int patientId, Long smisObservationId) {
 		// Creating the FHIR DSTU3 Context

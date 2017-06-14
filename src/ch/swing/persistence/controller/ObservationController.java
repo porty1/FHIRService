@@ -11,6 +11,12 @@ import java.util.List;
 
 import ch.swing.persistence.model.Observation;
 
+/**
+ * Controller Klasse für die Interaktion mit der Datenbank
+ * 
+ * @author Yannis Portmann
+ *
+ */
 public class ObservationController extends MasterDataController {
 
 	private static ObservationController oc = null;
@@ -34,6 +40,11 @@ public class ObservationController extends MasterDataController {
 
 	}
 
+	/**
+	 * Holt alle Vitaldaten aus der Datenbank, welche noch nicht gesendet wurden
+	 * 
+	 * @return
+	 */
 	public List<Observation> getObservationChanges() {
 		List<Observation> observationList = new ArrayList<Observation>();
 		Statement stmt = null;
@@ -84,6 +95,11 @@ public class ObservationController extends MasterDataController {
 
 	}
 
+	/**
+	 * Fügt das gesendet am Datum in die Datenbank
+	 * 
+	 * @param patientId
+	 */
 	public void updateSendDateObservation(int patientId) {
 		PreparedStatement pstmt = null;
 		try {
@@ -110,6 +126,11 @@ public class ObservationController extends MasterDataController {
 		}
 	}
 
+	/**
+	 * Speichert ein gesendet am Datum zu einem bestimmten Patienten
+	 * 
+	 * @param patientId
+	 */
 	public void updateSendDateNursingReport(int patientId) {
 		PreparedStatement pstmt = null;
 		try {
@@ -136,6 +157,12 @@ public class ObservationController extends MasterDataController {
 		}
 	}
 
+	/**
+	 * Führt ein update auf einem Nursing Report aus mit der SMIS ID
+	 * 
+	 * @param patientId
+	 * @param smisNursingReportId
+	 */
 	public void updateSMISIDNursingReport(int patientId, long smisNursingReportId) {
 		PreparedStatement pstmt = null;
 		try {
@@ -162,6 +189,12 @@ public class ObservationController extends MasterDataController {
 		}
 	}
 
+	/**
+	 * Führt ein Update auf einer Observation mit der SMIS ID aus
+	 * 
+	 * @param patientId
+	 * @param smisObservationId
+	 */
 	public void updateSMISIDObservation(int patientId, long smisObservationId) {
 		PreparedStatement pstmt = null;
 		try {

@@ -17,9 +17,15 @@ import ch.swing.persistence.model.InsuranceCard;
 import ch.swing.persistence.model.Patient;
 import ch.swing.persistence.model.Telecom;
 
+/**
+ * Controller Klasse um alle Stammdaten aus der Datenbank abzurufen und zu
+ * speichern
+ * 
+ * @author Yannis Portmann
+ *
+ */
 public class MasterDataController {
 	final static Logger logger = Logger.getLogger(MasterDataController.class);
-
 	private static MasterDataController mc = null;
 	private static DB_Connection dc = DB_Connection.getInstance();
 	private static Connection connection = null;
@@ -32,6 +38,9 @@ public class MasterDataController {
 		return mc;
 	}
 
+	/**
+	 * Konstruktor um die Verbindung zur Datenbank herzustellen
+	 */
 	public MasterDataController() {
 		try {
 			connection = dc.getConnection();
@@ -41,8 +50,12 @@ public class MasterDataController {
 
 	}
 
+	/**
+	 * Gibt eine Liste mit allen geänderten Patienten zurück
+	 * 
+	 * @return
+	 */
 	public List<Patient> getMasterDataChanges() {
-
 		List<Patient> patientList = new ArrayList<Patient>();
 		Statement stmt = null;
 		String query = "select * from dbo.Patient WHERE sendDate IS NULL OR lastUpdate >= sendDate";
@@ -120,6 +133,12 @@ public class MasterDataController {
 
 	}
 
+	/**
+	 * Überprüft, ob ein bestimmter Patient in der Datenbank vorhanden ist
+	 * 
+	 * @param idPatient
+	 * @return
+	 */
 	public Patient getPatient(int idPatient) {
 		Statement stmt = null;
 		String query = "select * from Patient where patientId=" + idPatient;
@@ -195,6 +214,7 @@ public class MasterDataController {
 	}
 
 	/**
+	 * Ruft die Versichertenkarte aus der Datenbank
 	 * 
 	 * @param insuranceCardId
 	 * @return
@@ -243,6 +263,7 @@ public class MasterDataController {
 	}
 
 	/**
+	 * Ruft das Telecom Objekt aus der Datenbank
 	 * 
 	 * @param telecomId
 	 * @return
@@ -289,6 +310,7 @@ public class MasterDataController {
 	}
 
 	/**
+	 * Holt den Hausarzt aus der Datenbank
 	 * 
 	 * @param cId
 	 * @return
@@ -351,6 +373,7 @@ public class MasterDataController {
 	}
 
 	/**
+	 * Ruft alle Patienten aus der Datenbank ab, mit den jeweiligen ID's
 	 * 
 	 * @return
 	 */
@@ -392,7 +415,8 @@ public class MasterDataController {
 	}
 
 	/**
-	 * Updates the SMIS Identifier in the Connection Database
+	 * Führt ein Update für die SMISID in der Datenbank aus, welche für
+	 * Änderungen benötigt wird
 	 * 
 	 * @param SMISID
 	 * @param patientId

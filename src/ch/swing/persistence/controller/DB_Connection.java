@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import ch.swing.helper.Configuration;
 
 /**
- * This class helps to get the connection to the database.
+ * Helper Klasse um die Datenbankverbindung herzustellen
  * 
  */
 public class DB_Connection {

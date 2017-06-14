@@ -21,8 +21,9 @@ import ch.swing.persistence.controller.MasterDataController;
 import ch.swing.persistence.model.Telecom;
 
 /**
+ * Converter Klasse um alle Stammdaten in eine FHIR Ressource umzuwandeln
  * 
- * @author Yannis Portmann
+ * @author Yannis Portmann / Shpend Vladi
  *
  */
 public class MasterdataConverter {
@@ -38,6 +39,12 @@ public class MasterdataConverter {
 		return mc;
 	}
 
+	/**
+	 * Startpunkt für die Konvertierung
+	 * 
+	 * @throws FHIRServiceException
+	 * @throws FHIRException
+	 */
 	public void startMasterdataConverter() throws FHIRServiceException, FHIRException {
 		List<ch.swing.persistence.model.Patient> patientList = getPatientList();
 		for (int i = 0; i < patientList.size(); i++) {
@@ -45,6 +52,13 @@ public class MasterdataConverter {
 		}
 	}
 
+	/**
+	 * Diese Methode konvertiert die Daten aus dem Source in die FHIR Ressource
+	 * 
+	 * @param source
+	 * @throws FHIRException
+	 * @throws FHIRServiceException
+	 */
 	public void convertPatient(ch.swing.persistence.model.Patient source) throws FHIRException, FHIRServiceException {
 		// Create a patient object
 		Patient patient = new Patient();
@@ -83,7 +97,7 @@ public class MasterdataConverter {
 		if (source.getSocialInsuranceNumber() != null) {
 			patient.addIdentifier().setSystem(CodingSystems.ZSR_OID).setValue(source.getSocialInsuranceNumber());
 		}
-		
+
 		// Needs to be adapted in a further step
 		// It is now static to match the FHIR requirements
 		Telecom telecom = new Telecom();
@@ -98,6 +112,13 @@ public class MasterdataConverter {
 		sendPatient(patient, source.getPatientId(), source.getSmisPatientId());
 	}
 
+	/**
+	 * Diese Methode sendet die erstellte Ressource an den FHIR Server
+	 * 
+	 * @param patient
+	 * @param patientId
+	 * @param smisPatientId
+	 */
 	public void sendPatient(Patient patient, int patientId, Long smisPatientId) {
 		// Creating the FHIR DSTU3 Context
 		FhirContext ctx = FhirContext.forDstu3();
@@ -124,6 +145,12 @@ public class MasterdataConverter {
 		MasterDataController.getInstance().updateSendDate(patientId);
 	}
 
+	/**
+	 * Hilfsmethode, um alle Patienten aus der Datenbank zu laden
+	 * 
+	 * @return
+	 * @throws FHIRServiceException
+	 */
 	public List<ch.swing.persistence.model.Patient> getPatientList() throws FHIRServiceException {
 		List<ch.swing.persistence.model.Patient> patientList = MasterDataController.getInstance()
 				.getMasterDataChanges();

@@ -5,6 +5,12 @@ import java.util.Map;
 
 import org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender;
 
+/**
+ * Hilfsklasse für die URL's von dem SMIS System
+ * 
+ * @author Yannis Portmann
+ *
+ */
 public final class CodingSystems {
 
 	/**
@@ -25,7 +31,6 @@ public final class CodingSystems {
 
 	public static final String VITALDATAURL = "http://smis.ch/fhir/types/open";
 
-	// TODO Funktioniert so noch nicht
 	@SuppressWarnings("serial")
 	public static final Map<Short, AdministrativeGender> GENDERMAP = new HashMap<Short, AdministrativeGender>() {
 		{

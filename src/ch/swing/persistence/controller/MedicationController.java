@@ -5,9 +5,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
+/**
+ * Kontrollerklasse für die Interaktion mit der Datenbank
+ * 
+ * @author Yannis Portmann
+ *
+ */
 public class MedicationController {
 	final static Logger logger = Logger.getLogger(MedicationController.class);
 
@@ -31,7 +39,7 @@ public class MedicationController {
 	}
 
 	/**
-	 * Save all the medication PDF's in the database
+	 * Speichert das PDF in der Datenbank
 	 * 
 	 * @param medicationFile
 	 * @param idPatient
@@ -66,16 +74,24 @@ public class MedicationController {
 		}
 	}
 
-	public byte[] getMedication(int patientId) {
+	/**
+	 * Holt die Medikation zu einem bestimmten Patienten aus der Datenbank
+	 * 
+	 * @param patientId
+	 * @return
+	 */
+	public List<byte[]> getMedication(int patientId) {
 		Statement stmt = null;
 		String query = "select * from dbo.Medication where idPatient=" + patientId;
+		List<byte[]> medList = new ArrayList<byte[]>();
 		try {
 			stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next()) {
 				byte[] medication = rs.getBytes("medication");
-				return medication;
+				medList.add(medication);
 			}
+			return medList;
 		} catch (SQLException err) {
 			logger.error(err.getMessage());
 		} finally {
@@ -89,9 +105,14 @@ public class MedicationController {
 		}
 		return null;
 	}
-	
-	public void deleteMedication(byte[] medicationFile, int idPatient) {
 
+	/**
+	 * Löscht eine bestimmte Medikation aus der Datenbank
+	 * 
+	 * @param medicationFile
+	 * @param idPatient
+	 */
+	public void deleteMedication(byte[] medicationFile, int idPatient) {
 		PreparedStatement pstmt = null;
 		try {
 			String INSERT_RECORD = "delete frob dbo.medication(idPatient, medication, creationDate) values(?, ?, ?)";

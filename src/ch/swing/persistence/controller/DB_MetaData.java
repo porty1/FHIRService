@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import ch.swing.persistence.controller.DB_Connection;;
 
 /**
- * This class helps to get the connection to the database.
+ * Helper Klasse für die Datenbank
  * 
  */
 public class DB_MetaData {

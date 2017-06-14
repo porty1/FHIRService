@@ -20,9 +20,9 @@ public class Configuration {
 	// ------------- Medication Settings -------------
 	// -----------------------------------------------
 	// From Date for the Medication
-	public static final String MEDICATIONDATEFROM = "20170101";
+	public static final String MEDICATIONDATEFROM = "2017";
 	// To Date for the Medication
-	public static final String MEDICATIONDATETO = "20180101";
+	public static final String MEDICATIONDATETO = "2018";
 	// URL for the Medication
 	public static final String MEDICATIONURL = "https://smis-test.arpage.ch:443/smis2-core/orgs/";
 	// Username to view the Medication (Administrator)
