@@ -77,23 +77,29 @@ public class MedicationConverter {
 			connection.connect();
 			// Entsprechende Codes vom Server müssen behandelt werden!
 			final int code = connection.getResponseCode();
-			if (code < 200 || code >= 300) {
+			if (code < 200 || code >= 300 || code == 403) {
 				logger.info("smisid: " + String.valueOf(SMISPatientId) + ", response code: " + String.valueOf(code));
 				throw new IOException(String.valueOf(code));
 			}
 			InputStream in = connection.getInputStream();
-			byte[] medicationFile = IOUtils.toByteArray(in);
-			List<byte[]> medList = MedicationController.getInstance().getMedication(patientId);
 
-			if (medList.isEmpty()) {
-				MedicationController.getInstance().saveMedication(medicationFile, patientId);
-			} else {
-				int index = medList.size() - 1;
-				if (index >= 0 && (medList.get(index).length == medicationFile.length)) {
-					logger.info("The Medication from Patient: " + patientId + " is up to date!");
-				} else {
+			if (in.read() != -1) {
+				byte[] medicationFile = IOUtils.toByteArray(in);
+				List<byte[]> medList = MedicationController.getInstance().getMedication(patientId);
+
+				if (medList.isEmpty()) {
 					MedicationController.getInstance().saveMedication(medicationFile, patientId);
+				} else {
+					int index = medList.size() - 1;
+					if (index >= 0 && (medList.get(index).length == medicationFile.length)) {
+						logger.info("The Medication from Patient: " + patientId + " is up to date!");
+					} else {
+						MedicationController.getInstance().saveMedication(medicationFile, patientId);
+						logger.info("Medication from Patient: " + patientId + " updated");
+					}
 				}
+			} else {
+				logger.error("No Medication for Patient: " + patientId);
 			}
 			in.close();
 		} catch (IOException e) {

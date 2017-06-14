@@ -59,7 +59,7 @@ public class MedicationController {
 			pstmt.setDate(3, sqlDate);
 			// Execute the changes
 			pstmt.executeUpdate();
-			logger.info("Medication from Patient: " + idPatient + " updated");
+			
 
 		} catch (SQLException err) {
 			logger.error(err.getMessage());
