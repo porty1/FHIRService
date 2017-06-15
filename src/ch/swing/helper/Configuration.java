@@ -48,5 +48,6 @@ public class Configuration {
 	// ------------- Scheduler Settings -------------
 	// ---------------------------------------------
 	// Configuration for the transfer time frame
-	public static final Integer SCHEDULERMINUTES = 5;
+	public static final Integer SCHEDULERMINUTES = 1;
+	public static final Integer SCHEDULERMINUTESMEDICATION = 3;
 }

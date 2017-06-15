@@ -65,25 +65,27 @@ public class MedicationConverter {
 	 * @param patientId
 	 */
 	public void getPDFFromURL(Long SMISPatientId, int patientId) {
-		final String urlSMISString = Configuration.MEDICATIONURL + Configuration.MEDICATIONORGID + "/patients/"
-				+ SMISPatientId + "/mediPlan?dateFrom=" + Configuration.MEDICATIONDATEFROM + "&dateTo="
-				+ Configuration.MEDICATIONDATETO;
-		try {
-			URL url = new URL(urlSMISString);
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestMethod("GET");
-			connection.setRequestProperty("Authorization", "Basic " + getBasicAuthenticationEncoding());
-			connection.setRequestProperty("Accept", "application/pdf; charset=UTF-8");
-			connection.connect();
-			// Entsprechende Codes vom Server müssen behandelt werden!
-			final int code = connection.getResponseCode();
-			if (code < 200 || code >= 300 || code == 403) {
-				logger.info("smisid: " + String.valueOf(SMISPatientId) + ", response code: " + String.valueOf(code));
-				throw new IOException(String.valueOf(code));
-			}
-			InputStream in = connection.getInputStream();
+		if (SMISPatientId != 0) {
 
-			if (in.read() != -1) {
+			final String urlSMISString = Configuration.MEDICATIONURL + Configuration.MEDICATIONORGID + "/patients/"
+					+ SMISPatientId + "/mediPlan?dateFrom=" + Configuration.MEDICATIONDATEFROM + "&dateTo="
+					+ Configuration.MEDICATIONDATETO;
+			try {
+				URL url = new URL(urlSMISString);
+				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+				connection.setRequestMethod("GET");
+				connection.setRequestProperty("Authorization", "Basic " + getBasicAuthenticationEncoding());
+				connection.setRequestProperty("Accept", "application/pdf; charset=UTF-8");
+				connection.connect();
+				// Entsprechende Codes vom Server müssen behandelt werden!
+				final int code = connection.getResponseCode();
+				if (code < 200 || code >= 300 || code == 403) {
+					logger.info(
+							"smisid: " + String.valueOf(SMISPatientId) + ", response code: " + String.valueOf(code));
+					throw new IOException(String.valueOf(code));
+				}
+				InputStream in = connection.getInputStream();
+
 				byte[] medicationFile = IOUtils.toByteArray(in);
 				List<byte[]> medList = MedicationController.getInstance().getMedication(patientId);
 
@@ -98,12 +100,10 @@ public class MedicationConverter {
 						logger.info("Medication from Patient: " + patientId + " updated");
 					}
 				}
-			} else {
-				logger.error("No Medication for Patient: " + patientId);
+				in.close();
+			} catch (IOException e) {
+				logger.error(e.getStackTrace() + e.getMessage());
 			}
-			in.close();
-		} catch (IOException e) {
-			logger.error(e.getStackTrace() + e.getMessage());
 		}
 	}
 }

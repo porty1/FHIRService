@@ -21,10 +21,11 @@ public final class FHIRServiceScheduler {
 	final static Logger logger = Logger.getLogger(FHIRServiceScheduler.class);
 
 	public static void main(String[] args) throws FHIRException, FHIRServiceException {
-		// MedicationConverter.getInstance().startMedicationConverter();
+
 		// MasterdataConverter.getInstance().startMasterdataConverter();
 		// ObservationConverter.getInstance().startNursingReportConverter();
 		// ObservationConverter.getInstance().startObservationConverter();
+		// MedicationConverter.getInstance().startMedicationConverter();
 
 		Runnable runnableMasterData = new Runnable() {
 			@Override
@@ -61,10 +62,12 @@ public final class FHIRServiceScheduler {
 				MedicationConverter.getInstance().startMedicationConverter();
 			}
 		};
-		ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+		ScheduledExecutorService service = Executors.newScheduledThreadPool(4);
+		// ScheduledExecutorService service =
+		// Executors.newSingleThreadScheduledExecutor();
 		service.scheduleAtFixedRate(runnableMasterData, 0, Configuration.SCHEDULERMINUTES, TimeUnit.MINUTES);
 		service.scheduleAtFixedRate(runnableNursingReport, 0, Configuration.SCHEDULERMINUTES, TimeUnit.MINUTES);
 		service.scheduleAtFixedRate(runnableObservation, 0, Configuration.SCHEDULERMINUTES, TimeUnit.MINUTES);
-		service.scheduleAtFixedRate(runnableMedication, 0, Configuration.SCHEDULERMINUTES, TimeUnit.MINUTES);
+		service.scheduleAtFixedRate(runnableMedication, 0, Configuration.SCHEDULERMINUTESMEDICATION, TimeUnit.MINUTES);
 	}
 }
